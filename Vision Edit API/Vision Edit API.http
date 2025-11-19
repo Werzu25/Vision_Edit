@@ -1,0 +1,6 @@
+@Vision_Edit_API_HostAddress = http://localhost:5032
+
+GET {{Vision_Edit_API_HostAddress}}/
+Accept: application/json
+
+###
