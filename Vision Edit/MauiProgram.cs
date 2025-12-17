@@ -11,7 +11,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder.Services.AddHttpClient("Base", httpClient =>
         {
-            httpClient.BaseAddress = new Uri("");
+            httpClient.BaseAddress = new Uri("https://localhost:7297/api");
         });
         builder
             .UseMauiCommunityToolkit()
