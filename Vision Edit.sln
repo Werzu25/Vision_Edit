@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vision Edit API", "Vision Edit API\Vision Edit API.csproj", "{427E3C7C-1B4D-4BEF-AB66-AF1D45152B1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools", "Tools\Tools.csproj", "{660CB1AF-E4E3-4221-8C5F-5538F35D5240}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{427E3C7C-1B4D-4BEF-AB66-AF1D45152B1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{427E3C7C-1B4D-4BEF-AB66-AF1D45152B1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{427E3C7C-1B4D-4BEF-AB66-AF1D45152B1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{660CB1AF-E4E3-4221-8C5F-5538F35D5240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{660CB1AF-E4E3-4221-8C5F-5538F35D5240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{660CB1AF-E4E3-4221-8C5F-5538F35D5240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{660CB1AF-E4E3-4221-8C5F-5538F35D5240}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
