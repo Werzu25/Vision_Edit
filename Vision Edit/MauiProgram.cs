@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Vision_Edit;
 
@@ -8,6 +9,10 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
+        builder.Services.AddHttpClient("Base", httpClient =>
+        {
+            httpClient.BaseAddress = new Uri("");
+        });
         builder
             .UseMauiCommunityToolkit()
             .UseMauiApp<App>()
