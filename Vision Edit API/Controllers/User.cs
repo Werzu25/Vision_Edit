@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using ORM.Services;
+using Tools;
 
 namespace Vision_Edit_API.Controllers
 {
@@ -37,8 +38,15 @@ namespace Vision_Edit_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserModel user)
         {
+            var users = await _userService.GetAllUsers();
+            if (!Validation.ValidUsername(user.Username,users.Select(u => u.Username).ToList()))
+                ModelState.AddModelError("Username", "Username already exists");
+            if (!Validation.ValidString(user.Username, 3))
+                ModelState.AddModelError("Username", "Username must be at least 3 characters long");
+            
+            
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             var response = await _userService.CreateUser(user);
             if (user == null)
                 return NoContent();
