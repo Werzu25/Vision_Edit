@@ -11,5 +11,9 @@
         Title="Home"
         ContentTemplate="{DataTemplate views:MainPage}"
         Route="MainPage" />
+    <ShellContent
+        Title="Register"
+        ContentTemplate="{DataTemplate views:RegistrationPage}"
+        Route="RegistrationPage" />
 
 </Shell>
