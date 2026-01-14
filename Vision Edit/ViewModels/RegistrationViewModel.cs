@@ -37,10 +37,10 @@ public partial class RegistrationViewModel : ObservableObject
             Email = _email,
             Password = _password
         }; 
-        var result =  await _httpClient.PostAsJsonAsync("/User", user);
+        var result =  await _httpClient.PostAsJsonAsync("User", user);
         if (result.IsSuccessStatusCode)
         {
-            SwitchToMainPage();
+            await SwitchToMainPage();
         }
     }
 }
