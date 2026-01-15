@@ -1,6 +1,9 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Tools;
+using Vision_Edit.ViewModels;
+using Vision_Edit.Views;
 
 namespace Vision_Edit;
 
@@ -21,6 +24,9 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+        builder.Services.AddSingleton<UserManager>();
+        builder.Services.AddTransient<RegistrationPage>();
+        builder.Services.AddTransient<RegistrationViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

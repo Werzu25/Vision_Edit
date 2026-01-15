@@ -17,7 +17,7 @@ namespace Vision_Edit_API.Controllers
             _userService = new UserService(dbManager); 
         }
         
-        // GET: api/<User>
+        // GET: api/<Users>
         [HttpGet]
         public async Task<IActionResult> Get()
         {

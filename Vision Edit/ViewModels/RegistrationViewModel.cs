@@ -2,12 +2,14 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Models;
+using Tools;
 
 namespace Vision_Edit.ViewModels;
 
 public partial class RegistrationViewModel : ObservableObject
 {
     private readonly HttpClient _httpClient;
+    private  UserManager _userManager;
 
     [ObservableProperty] private string _username;
     [ObservableProperty] private string _firstName;
@@ -15,8 +17,9 @@ public partial class RegistrationViewModel : ObservableObject
     [ObservableProperty] private string _email;
     [ObservableProperty] private string _password;
     
-    public RegistrationViewModel (HttpClient httpClient)
+    public RegistrationViewModel (HttpClient httpClient, UserManager userManager)
     {
+        _userManager = userManager;
         _httpClient = httpClient;
     }
     
@@ -40,6 +43,7 @@ public partial class RegistrationViewModel : ObservableObject
         var result =  await _httpClient.PostAsJsonAsync("User", user);
         if (result.IsSuccessStatusCode)
         {
+            _userManager.username = user.Username;
             await SwitchToMainPage();
         }
     }

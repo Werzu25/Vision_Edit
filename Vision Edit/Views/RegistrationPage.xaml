@@ -23,7 +23,7 @@
             <!-- Username -->
             <VerticalStackLayout Spacing="6">
                 <Label Text="Username" FontAttributes="Bold" />
-                <Entry Placeholder="e.g. clanker_slayer"
+                <Entry Placeholder="Username"
                        Text="{Binding Username}"
                        ClearButtonVisibility="WhileEditing"
                        ReturnType="Next" />
@@ -32,7 +32,7 @@
             <!-- First name -->
             <VerticalStackLayout Spacing="6">
                 <Label Text="First name" FontAttributes="Bold" />
-                <Entry Placeholder="Your first name"
+                <Entry Placeholder="First name"
                        Text="{Binding FirstName}"
                        ClearButtonVisibility="WhileEditing"
                        ReturnType="Next" />
@@ -41,7 +41,7 @@
             <!-- Last name -->
             <VerticalStackLayout Spacing="6">
                 <Label Text="Last name" FontAttributes="Bold" />
-                <Entry Placeholder="Your last name"
+                <Entry Placeholder="Last name"
                        Text="{Binding LastName}"
                        ClearButtonVisibility="WhileEditing"
                        ReturnType="Next" />
@@ -50,7 +50,7 @@
             <!-- Email -->
             <VerticalStackLayout Spacing="6">
                 <Label Text="Email" FontAttributes="Bold" />
-                <Entry Placeholder="name@example.com"
+                <Entry Placeholder="Email: name@example.com"
                        Text="{Binding Email}"
                        Keyboard="Email"
                        ClearButtonVisibility="WhileEditing"
