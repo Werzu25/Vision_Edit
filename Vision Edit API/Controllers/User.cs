@@ -33,6 +33,16 @@ namespace Vision_Edit_API.Controllers
         {
             return "value";
         }
+        
+        // GET api/<User>/login}
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+            UserModel user = await _userService.LoginUser(username, password);
+            if (user == null)
+                return Unauthorized();
+            return Ok(user);
+        }
 
         // POST api/<User>
         [HttpPost]

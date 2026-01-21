@@ -16,5 +16,10 @@
         Title="Register"
         ContentTemplate="{DataTemplate views:RegistrationPage}"
         Route="RegistrationPage" />
+    
+    <ShellContent
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="Login"/>
 
 </Shell>

@@ -23,6 +23,17 @@ public class UserService
     {
         return await _dbManager.Users.FindAsync(userId);
     }
+    
+    public async Task<UserModel> LoginUser(string username, string password)
+    {
+        UserModel user = await _dbManager.Users.FirstOrDefaultAsync(u => u.Username == username);
+        if (user == null) 
+            return null;
+        PasswordHasher<UserModel> passwordHasher = new PasswordHasher<UserModel>();
+        if(passwordHasher.VerifyHashedPassword(user,user.Password,password) == PasswordVerificationResult.Success)
+            return user;
+        return null;
+    }
 
     public async Task<UserModel> CreateUser(UserModel userModel)
     {

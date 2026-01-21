@@ -9,7 +9,7 @@ namespace Vision_Edit.ViewModels;
 public partial class RegistrationViewModel : ObservableObject
 {
     private readonly HttpClient _httpClient;
-    private  UserManager _userManager;
+    private readonly UserManager _userManager;
 
     [ObservableProperty] private string _username;
     [ObservableProperty] private string _firstName;
@@ -24,7 +24,7 @@ public partial class RegistrationViewModel : ObservableObject
     }
     
     [RelayCommand]
-    public async Task SwitchToMainPage()
+    public async Task RedirectToMainPage()
     {
         await Shell.Current.GoToAsync("//MainPage");
     }
@@ -34,17 +34,17 @@ public partial class RegistrationViewModel : ObservableObject
     {
         UserModel user = new()
         {
-            Username = _username,
-            FirstName = _firstName,
-            LastName = _lastName,
-            Email = _email,
-            Password = _password
+            Username = Username,
+            FirstName = FirstName,
+            LastName = LastName,
+            Email = Email,
+            Password = Password
         }; 
         var result =  await _httpClient.PostAsJsonAsync("User", user);
         if (result.IsSuccessStatusCode)
         {
             _userManager.username = user.Username;
-            await SwitchToMainPage();
+            await RedirectToMainPage();
         }
     }
 }

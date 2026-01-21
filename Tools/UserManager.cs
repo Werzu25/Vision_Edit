@@ -3,7 +3,7 @@
 public class UserManager
 {
     public string username { get; set; }
-    public bool is_logged_in()
+    public bool IsLoggedIn()
     {
         if (username != null || username != "")
         {

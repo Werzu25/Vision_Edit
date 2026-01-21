@@ -27,6 +27,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<UserManager>();
         builder.Services.AddTransient<RegistrationPage>();
         builder.Services.AddTransient<RegistrationViewModel>();
+        builder.Services.AddTransient<LoginPage>();
+        builder.Services.AddTransient<LoginViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();
