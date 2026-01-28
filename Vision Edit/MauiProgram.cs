@@ -31,6 +31,10 @@ public static class MauiProgram
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<LoginViewModel>();
 
+        builder.Services.AddSingleton<AppShell>();
+        builder.Services.AddSingleton<AppShellViewModel>();
+        
+
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

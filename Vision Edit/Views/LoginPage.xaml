@@ -22,6 +22,7 @@
                 <Label Text="Username" FontAttributes="Bold" />
                 <Entry x:Name="UsernameEntry"
                        Placeholder="Username"
+                       Text="{Binding Username}"
                        ClearButtonVisibility="WhileEditing"
                        ReturnType="Next" />
             </VerticalStackLayout>
@@ -32,6 +33,7 @@
                 <Entry x:Name="PasswordEntry"
                        Placeholder="••••••••"
                        IsPassword="True"
+                       Text="{Binding Password}"
                        ClearButtonVisibility="WhileEditing"
                        ReturnType="Done" />
             </VerticalStackLayout>

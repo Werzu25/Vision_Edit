@@ -11,11 +11,4 @@ public class AppViewModel
     {
         _userManager = userManager;
     }
-
-    public async Task<Boolean> IsLoggedIn()
-    {
-        if (_userManager.IsLoggedIn())
-            return true;
-        return false;
-    }
 }

@@ -1,15 +1,13 @@
-﻿namespace Tools;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-public class UserManager
+namespace Tools;
+
+public partial class UserManager : ObservableObject
 {
-    public string username { get; set; }
-    public bool IsLoggedIn()
-    {
-        if (username != null || username != "")
-        {
-            return true;
-        }
-        return false;
-    }
-    
+    [ObservableProperty]
+    private string _username;
+
+    public bool IsLoggedIn => !string.IsNullOrEmpty(Username);
 }

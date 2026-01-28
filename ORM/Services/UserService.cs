@@ -24,13 +24,13 @@ public class UserService
         return await _dbManager.Users.FindAsync(userId);
     }
     
-    public async Task<UserModel> LoginUser(string username, string password)
+    public async Task<UserModel> LoginUser(LoginModel loginModel)
     {
-        UserModel user = await _dbManager.Users.FirstOrDefaultAsync(u => u.Username == username);
+        UserModel user = await _dbManager.Users.FirstOrDefaultAsync(u => u.Username == loginModel.Username);
         if (user == null) 
             return null;
         PasswordHasher<UserModel> passwordHasher = new PasswordHasher<UserModel>();
-        if(passwordHasher.VerifyHashedPassword(user,user.Password,password) == PasswordVerificationResult.Success)
+        if(passwordHasher.VerifyHashedPassword(user,user.Password,loginModel.Password) == PasswordVerificationResult.Success)
             return user;
         return null;
     }
@@ -38,7 +38,13 @@ public class UserService
     public async Task<UserModel> CreateUser(UserModel userModel)
     {
         PasswordHasher<UserModel> passwordHasher = new PasswordHasher<UserModel>();
-        passwordHasher.HashPassword(userModel, userModel.Password);
-        return (await _dbManager.AddAsync(userModel)).Entity;
+        userModel.Password = passwordHasher.HashPassword(userModel, userModel.Password);
+        var createdUser = (await _dbManager.AddAsync(userModel)).Entity;
+        if (await _dbManager.SaveChangesAsync() > 0)
+        {
+            return createdUser;
+        }
+
+        return null;
     }
 }

@@ -36,9 +36,9 @@ namespace Vision_Edit_API.Controllers
         
         // GET api/<User>/login}
         [HttpPost("login")]
-        public async Task<IActionResult> Login(string username, string password)
+        public async Task<IActionResult> Login(LoginModel login)
         {
-            UserModel user = await _userService.LoginUser(username, password);
+            UserModel user = await _userService.LoginUser(login);
             if (user == null)
                 return Unauthorized();
             return Ok(user);

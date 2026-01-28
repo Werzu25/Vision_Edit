@@ -17,10 +17,10 @@ public partial class RegistrationViewModel : ObservableObject
     [ObservableProperty] private string _email;
     [ObservableProperty] private string _password;
     
-    public RegistrationViewModel (HttpClient httpClient, UserManager userManager)
+    public RegistrationViewModel (IHttpClientFactory httpClientFactory, UserManager userManager)
     {
         _userManager = userManager;
-        _httpClient = httpClient;
+        _httpClient = httpClientFactory.CreateClient("Base");
     }
     
     [RelayCommand]
@@ -43,7 +43,7 @@ public partial class RegistrationViewModel : ObservableObject
         var result =  await _httpClient.PostAsJsonAsync("User", user);
         if (result.IsSuccessStatusCode)
         {
-            _userManager.username = user.Username;
+            _userManager.Username = user.Username;
             await RedirectToMainPage();
         }
     }

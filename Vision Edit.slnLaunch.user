@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "Vision Edit Project",
+    "Projects": [
+      {
+        "Path": "Vision Edit API\\Vision Edit API.csproj",
+        "Action": "Start",
+        "DebugTarget": "IIS Express"
+      },
+      {
+        "Path": "Vision Edit\\Vision Edit.csproj",
+        "Action": "Start",
+        "DebugTarget": "Windows Machine"
+      }
+    ]
+  }
+]
