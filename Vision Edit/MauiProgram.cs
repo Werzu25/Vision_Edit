@@ -14,7 +14,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder.Services.AddHttpClient("Base", httpClient =>
         {
-            httpClient.BaseAddress = new Uri("https://localhost:7297/api");
+            httpClient.BaseAddress = new Uri("https://localhost:44311/api/");
         });
         builder
             .UseMauiCommunityToolkit()
@@ -25,6 +25,7 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
         builder.Services.AddSingleton<UserManager>();
+
         builder.Services.AddTransient<RegistrationPage>();
         builder.Services.AddTransient<RegistrationViewModel>();
         builder.Services.AddTransient<LoginPage>();
