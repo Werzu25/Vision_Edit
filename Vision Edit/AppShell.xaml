@@ -8,7 +8,16 @@
     xmlns:views="clr-namespace:Vision_Edit.Views"
     xmlns:viewmodels="clr-namespace:Vision_Edit.ViewModels"
     x:DataType="viewmodels:AppShellViewModel"
+    FlyoutBehavior="Flyout"
     Title="Vision_Edit">
+
+    <Shell.FlyoutFooter>
+        <StackLayout Padding="15" Spacing="10">
+            <Button Text="Logout"
+                    IsVisible="{Binding UserManager.IsLoggedIn}" 
+                    Command="{Binding LogoutCommand}"/>
+        </StackLayout>
+    </Shell.FlyoutFooter>
 
     <ShellContent
         Title="Home"
@@ -19,20 +28,19 @@
         Title="Register"
         ContentTemplate="{DataTemplate views:RegistrationPage}"
         Route="RegistrationPage" 
-        IsVisible="{Binding IsLoggedIn, Converter={toolkit:InvertedBoolConverter}}" />
+        IsVisible="{Binding UserManager.IsLoggedIn, Converter={toolkit:InvertedBoolConverter}}" />
 
     <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate views:LoginPage}"
         Route="Login"
-        IsVisible="{Binding IsLoggedIn, Converter={toolkit:InvertedBoolConverter}}"
+        IsVisible="{Binding UserManager.IsLoggedIn, Converter={toolkit:InvertedBoolConverter}}"
         />
-    <Shell.FlyoutContent>
-        <StackLayout Grid.Row="1" Spacing="15">
-            <Button Text="Logout"
-                    IsVisible="{Binding IsLoggedIn}" 
-                    Command="{Binding LogoutCommand}"/>
-        </StackLayout>
-    </Shell.FlyoutContent>
+
+    <ShellContent
+        Title="Editor"
+        ContentTemplate="{DataTemplate views:EditorPage}"
+        Route="Editor"
+        />
 
 </Shell>
