@@ -7,7 +7,7 @@ namespace Tools;
 public partial class UserManager : ObservableObject
 {
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsLoggedIn))]
     private string _username;
-
     public bool IsLoggedIn => !string.IsNullOrEmpty(Username);
 }
