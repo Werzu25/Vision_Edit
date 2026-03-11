@@ -6,6 +6,7 @@ namespace ORM.Services;
 public class DbManager : DbContext
 {
     public DbSet<UserModel> Users { get; set; }
+    public DbSet<DocumentModel> Documents { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string connectionString = "Server=localhost;Database=vision_edit;User=root;Password=root;";

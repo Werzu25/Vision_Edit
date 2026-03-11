@@ -47,4 +47,9 @@ public class UserService
 
         return null;
     }
+
+    public async Task<UserModel?> GetUserByUsername(string username)
+    {
+        return await _dbManager.Users.FirstOrDefaultAsync(u => u.Username == username);
+    }
 }

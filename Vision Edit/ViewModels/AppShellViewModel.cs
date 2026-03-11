@@ -12,6 +12,7 @@ public partial class AppShellViewModel : ObservableObject
     public AppShellViewModel(UserManager userManager)
     {
         _userManager = userManager;
+        ApiHandler api = new ApiHandler();
     }
 
     [RelayCommand]

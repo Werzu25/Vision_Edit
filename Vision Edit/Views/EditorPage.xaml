@@ -1,10 +1,103 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:Vision_Edit.Views"
-             x:Class="Vision_Edit.Views.EditorPage">
-    <ContentPage.Content>
-        <views:EditorView/>
-    </ContentPage.Content>
+             x:Class="Vision_Edit.Views.EditorPage"
+             BackgroundColor="{StaticResource AppBg}"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#09090E" Offset="0" />
+            <GradientStop Color="#0E1020" Offset="1" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <Grid RowDefinitions="54,*" RowSpacing="8" Padding="10,10,10,8">
+
+        <Border Grid.Row="0"
+                Stroke="{StaticResource AppBorderStrong}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                BackgroundColor="{StaticResource AppPanel}"
+                Padding="14,0">
+            <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+                <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                    <Label Text="✦" TextColor="{StaticResource AppAccentLight}" FontSize="14" />
+                    <Label Text="Vision Edit Workspace"
+                           TextColor="{StaticResource AppText1}"
+                           FontSize="13"
+                           FontAttributes="Bold" />
+                </HorizontalStackLayout>
+
+                <Label Grid.Column="1"
+                       Text="Resize panels from the center handle"
+                       TextColor="{StaticResource AppText3}"
+                       FontSize="11"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center" />
+
+                <Border Grid.Column="2"
+                        Stroke="{StaticResource AppBorder}"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="8,3"
+                        BackgroundColor="{StaticResource AppSurface}">
+                    <Label Text="Editor + AI"
+                           FontSize="10"
+                           TextColor="{StaticResource AppText2}" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1"
+              x:Name="ContentGrid"
+              ColumnDefinitions="*,8,360"
+              ColumnSpacing="10"
+              RowSpacing="0">
+
+            <Border Grid.Column="0"
+                    Stroke="{StaticResource AppBorder}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="#0B0C14"
+                    Padding="0"
+                    Margin="0">
+                <views:EditorView x:Name="EditorPanel" VerticalOptions="Fill" />
+            </Border>
+
+            <Grid Grid.Column="1"
+                  VerticalOptions="Fill"
+                  HorizontalOptions="Fill"
+                  BackgroundColor="Transparent">
+                <Border Stroke="{StaticResource AppBorderStrong}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 10"
+                        BackgroundColor="{StaticResource AppPanel}"
+                        VerticalOptions="Fill"
+                        HorizontalOptions="Fill">
+                    <VerticalStackLayout HorizontalOptions="Center"
+                                         VerticalOptions="Center"
+                                         Spacing="4">
+                        <BoxView Color="{StaticResource AppAccentLight}" WidthRequest="2" HeightRequest="18" CornerRadius="1" />
+                        <BoxView Color="{StaticResource AppAccentLight}" WidthRequest="2" HeightRequest="18" CornerRadius="1" />
+                        <BoxView Color="{StaticResource AppAccentLight}" WidthRequest="2" HeightRequest="18" CornerRadius="1" />
+                    </VerticalStackLayout>
+                </Border>
+                <Grid.GestureRecognizers>
+                    <PanGestureRecognizer PanUpdated="OnDividerPanUpdated" />
+                </Grid.GestureRecognizers>
+            </Grid>
+
+            <Border Grid.Column="2"
+                    Stroke="{StaticResource AppBorder}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="#0B0C14"
+                    Padding="0"
+                    Margin="0">
+                <views:ChatView x:Name="ChatPanel" VerticalOptions="Fill" />
+            </Border>
+
+        </Grid>
+    </Grid>
 </ContentPage>

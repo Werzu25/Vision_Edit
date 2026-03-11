@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build:*)",
+      "Bash(grep -E \"\\\\.\\(cs|dll\\)$\")",
+      "Bash(cd /tmp)",
+      "Bash(unzip -l /c/Users/leonw/.nuget/packages/openai/2.8.0/openai.2.8.0.nupkg)",
+      "Bash(dotnet add:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:devblogs.microsoft.com)",
+      "WebFetch(domain:www.nuget.org)"
+    ]
+  }
+}

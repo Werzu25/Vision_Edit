@@ -1,7 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Vision_Edit.Views.GlowBorderView">
     
+    <ContentView.ControlTemplate>
+        <ControlTemplate>
+            <Border Margin="10"
+                    Padding="5"
+                    Stroke="#6B5FFF"
+                    StrokeThickness="1.5"
+                    StrokeShape="RoundRectangle 12">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#0A0E1A" Offset="0.0" />
+                        <GradientStop Color="#1A1D2E" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Shadow>
+                    <Shadow Brush="#6B5FFF"
+                            Radius="15"
+                            Opacity="0.3"
+                            Offset="0,0"/>
+                </Border.Shadow>
+
+                <ContentPresenter />
+            </Border>
+        </ControlTemplate>
+    </ContentView.ControlTemplate>
 </ContentView>

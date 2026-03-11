@@ -21,7 +21,7 @@ public partial class LoginViewModel : ObservableObject
     }
     
     [RelayCommand]
-    public async Task Login()
+    public async Task Login(string pageName)
     {
         LoginModel login = new()
         {
@@ -35,13 +35,13 @@ public partial class LoginViewModel : ObservableObject
             {
                 _userManager.Username = Username;
             }
-            await Shell.Current.GoToAsync("//MainPage");
+            await Shell.Current.GoToAsync("//Editor");
         }
     }
 
     [RelayCommand]
     public async Task RedirectToRegisterPage()
     {
-        await Shell.Current.GoToAsync("//RegisterPage");
+        await Shell.Current.GoToAsync("//RegistrationPage");
     }
 }

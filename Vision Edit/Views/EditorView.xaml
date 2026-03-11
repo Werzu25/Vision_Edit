@@ -1,12 +1,143 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8"?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Vision_Edit.Views.EditorView">
-    <ScrollView>
-        <Border Margin="5" Padding="10" Stroke="Purple" StrokeThickness="2.5" >
-            <VerticalStackLayout Margin="5"  Padding="10">
-            </VerticalStackLayout>
+             xmlns:viewmodels="clr-namespace:Vision_Edit.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Vision_Edit.Views.EditorView"
+             x:DataType="viewmodels:EditorViewModel">
+
+    <Grid RowDefinitions="54,46,*,Auto,26" RowSpacing="0" BackgroundColor="Transparent">
+
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto" ColumnSpacing="8" Padding="12,8" BackgroundColor="{StaticResource AppPanel}">
+            <Border Grid.Column="0"
+                    Stroke="Transparent"
+                    BackgroundColor="{StaticResource AppWarning}"
+                    WidthRequest="10"
+                    HeightRequest="10"
+                    StrokeShape="RoundRectangle 10"
+                    VerticalOptions="Center"
+                    IsVisible="{Binding HasUnsavedChanges}" />
+
+            <Border Grid.Column="1" Stroke="{StaticResource AppBorder}" StrokeShape="RoundRectangle 9" BackgroundColor="{StaticResource AppSurface}" Padding="10,0" HeightRequest="34" VerticalOptions="Center">
+                <Entry Text="{Binding DocumentTitle}"
+                       Placeholder="Untitled"
+                       BackgroundColor="Transparent"
+                       TextColor="{StaticResource AppText1}"
+                       PlaceholderColor="{StaticResource AppText3}"
+                       FontAttributes="Bold"
+                       FontSize="13"
+                       ClearButtonVisibility="WhileEditing" />
+            </Border>
+
+            <Button Grid.Column="2" Text="New" Command="{Binding NewDocumentCommand}" BackgroundColor="Transparent" TextColor="{StaticResource AppText2}" HeightRequest="30" Padding="8,0" />
+            <Button Grid.Column="3" Text="Open" Command="{Binding OpenDocumentCommand}" BackgroundColor="Transparent" TextColor="{StaticResource AppText2}" HeightRequest="30" Padding="8,0" />
+            <Button Grid.Column="4" Text="Save" Command="{Binding SaveDocumentCommand}" BackgroundColor="{StaticResource AppAccentDim}" TextColor="White" FontAttributes="Bold" HeightRequest="30" Padding="12,0" />
+            <Button Grid.Column="5" Text="⋯" Command="{Binding SaveDocumentAsCommand}" BackgroundColor="Transparent" TextColor="{StaticResource AppText2}" HeightRequest="30" WidthRequest="30" Padding="0" />
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto,1,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto,Auto" ColumnSpacing="6" Padding="12,8" BackgroundColor="{StaticResource AppPanel}">
+            <Button Grid.Column="0" Text="−" Command="{Binding DecreaseFontSizeCommand}" WidthRequest="24" HeightRequest="24" Padding="0" BackgroundColor="{StaticResource AppSurface}" TextColor="{StaticResource AppText2}" FontAttributes="Bold" />
+            <Label Grid.Column="1" Text="{Binding FontSize, StringFormat='{0:F0}'}" WidthRequest="28" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="12" TextColor="{StaticResource AppText2}" />
+            <Button Grid.Column="2" Text="+" Command="{Binding IncreaseFontSizeCommand}" WidthRequest="24" HeightRequest="24" Padding="0" BackgroundColor="{StaticResource AppSurface}" TextColor="{StaticResource AppText2}" FontAttributes="Bold" />
+
+            <BoxView Grid.Column="3" WidthRequest="1" HeightRequest="20" VerticalOptions="Center" Color="{StaticResource AppBorder}" />
+
+            <Border Grid.Column="4" WidthRequest="16" HeightRequest="16" StrokeShape="Ellipse" StrokeThickness="0" BackgroundColor="#E8E9F3" VerticalOptions="Center"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SetFontColorCommand}" CommandParameter="#E8E9F3" /></Border.GestureRecognizers></Border>
+            <Border Grid.Column="5" WidthRequest="16" HeightRequest="16" StrokeShape="Ellipse" StrokeThickness="0" BackgroundColor="#3DFF88" VerticalOptions="Center"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SetFontColorCommand}" CommandParameter="#3DFF88" /></Border.GestureRecognizers></Border>
+            <Border Grid.Column="6" WidthRequest="16" HeightRequest="16" StrokeShape="Ellipse" StrokeThickness="0" BackgroundColor="#FFD060" VerticalOptions="Center"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SetFontColorCommand}" CommandParameter="#FFD060" /></Border.GestureRecognizers></Border>
+            <Border Grid.Column="7" WidthRequest="16" HeightRequest="16" StrokeShape="Ellipse" StrokeThickness="0" BackgroundColor="#40C8FF" VerticalOptions="Center"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SetFontColorCommand}" CommandParameter="#40C8FF" /></Border.GestureRecognizers></Border>
+            <Border Grid.Column="8" WidthRequest="16" HeightRequest="16" StrokeShape="Ellipse" StrokeThickness="0" BackgroundColor="#C080FF" VerticalOptions="Center"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SetFontColorCommand}" CommandParameter="#C080FF" /></Border.GestureRecognizers></Border>
+            <Border Grid.Column="9" WidthRequest="16" HeightRequest="16" StrokeShape="Ellipse" StrokeThickness="0" BackgroundColor="#FF7060" VerticalOptions="Center"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SetFontColorCommand}" CommandParameter="#FF7060" /></Border.GestureRecognizers></Border>
+
+            <Border Grid.Column="11"
+                    Padding="10,4"
+                    StrokeShape="RoundRectangle 7"
+                    StrokeThickness="1"
+                    VerticalOptions="Center">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" Binding="{Binding IsCompletionEnabled}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource AppAccent}" />
+                        <Setter Property="BackgroundColor" Value="{StaticResource AppAccentSoft}" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Border" Binding="{Binding IsCompletionEnabled}" Value="False">
+                        <Setter Property="Stroke" Value="{StaticResource AppBorder}" />
+                        <Setter Property="BackgroundColor" Value="{StaticResource AppSurface}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleCompletionCommand}" />
+                </Border.GestureRecognizers>
+                <Label FontSize="11" FontAttributes="Bold" VerticalOptions="Center">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding IsCompletionEnabled}" Value="True">
+                            <Setter Property="Text" Value="⚡ Inline AI ON" />
+                            <Setter Property="TextColor" Value="{StaticResource AppAccentLight}" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Label" Binding="{Binding IsCompletionEnabled}" Value="False">
+                            <Setter Property="Text" Value="⚡ Inline AI OFF" />
+                            <Setter Property="TextColor" Value="{StaticResource AppText3}" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+            </Border>
+
+            <Button Grid.Column="12"
+                    Text="Generate"
+                    Command="{Binding RequestCompletionCommand}"
+                    IsVisible="{Binding IsCompletionEnabled}"
+                    IsEnabled="{Binding IsLoadingCompletion, Converter={toolkit:InvertedBoolConverter}}"
+                    BackgroundColor="{StaticResource AppAccentDim}"
+                    TextColor="White"
+                    FontSize="11"
+                    HeightRequest="28"
+                    Padding="12,0" />
+        </Grid>
+
+        <Border Grid.Row="2"
+                Margin="10,8,10,8"
+                Stroke="{StaticResource AppBorder}"
+                StrokeShape="RoundRectangle 10"
+                StrokeThickness="1"
+                BackgroundColor="{StaticResource EditorBg}">
+            <Editor x:Name="MainEditor"
+                    Text="{Binding Text, Mode=TwoWay}"
+                    CursorPosition="{Binding CursorPosition, Mode=TwoWay}"
+                    SelectionLength="{Binding SelectionLength, Mode=TwoWay}"
+                    FontSize="{Binding FontSize}"
+                    TextColor="{Binding FontColor}"
+                    FontFamily="Courier New"
+                    BackgroundColor="Transparent"
+                    Placeholder="Start typing..."
+                    PlaceholderColor="{StaticResource AppText3}"
+                    Margin="10,8"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill">
+                <Editor.Behaviors>
+                    <toolkit:EventToCommandBehavior EventName="Unfocused" Command="{Binding SetSelectedTextCommand}" />
+                </Editor.Behaviors>
+            </Editor>
         </Border>
-    </ScrollView>
+
+        <Border Grid.Row="3"
+                Margin="10,0,10,8"
+                Padding="12,8"
+                Stroke="{StaticResource AppBorderStrong}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 9"
+                BackgroundColor="#101229"
+                IsVisible="{Binding IsCompletionVisible}">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+                <ActivityIndicator Grid.Column="0" IsRunning="{Binding IsLoadingCompletion}" IsVisible="{Binding IsLoadingCompletion}" Color="{StaticResource AppAccent}" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
+                <Label Grid.Column="1" Text="{Binding CompletionSuggestion}" TextColor="#9EA2CF" FontFamily="Courier New" FontSize="{Binding FontSize}" FontAttributes="Italic" LineBreakMode="TailTruncation" VerticalOptions="Center" />
+                <Button Grid.Column="2" Text="Tab to accept" Command="{Binding AcceptCompletionCommand}" HeightRequest="24" Padding="10,0" FontSize="11" BackgroundColor="{StaticResource AppAccentSoft}" TextColor="{StaticResource AppAccentLight}" />
+                <Button Grid.Column="3" Text="✕" Command="{Binding DismissCompletionCommand}" WidthRequest="26" HeightRequest="24" Padding="0" BackgroundColor="Transparent" TextColor="{StaticResource AppText3}" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="4" ColumnDefinitions="*,Auto" Padding="12,0" BackgroundColor="{StaticResource AppAccentDim}">
+            <Label Grid.Column="0" Text="{Binding CursorInfo}" TextColor="#D2D3FF" FontSize="11" VerticalOptions="Center" />
+            <Label Grid.Column="1" Text="Inline completion ready" TextColor="#A2A7E3" FontSize="10" VerticalOptions="Center" />
+        </Grid>
+
+    </Grid>
 </ContentView>

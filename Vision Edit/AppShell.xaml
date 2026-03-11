@@ -4,43 +4,85 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Vision_Edit"
     xmlns:views="clr-namespace:Vision_Edit.Views"
     xmlns:viewmodels="clr-namespace:Vision_Edit.ViewModels"
     x:DataType="viewmodels:AppShellViewModel"
     FlyoutBehavior="Flyout"
-    Title="Vision_Edit">
+    Shell.BackgroundColor="{StaticResource AppPanel}"
+    Shell.ForegroundColor="{StaticResource AppAccentLight}"
+    Shell.TitleColor="{StaticResource AppText1}"
+    Shell.UnselectedColor="{StaticResource AppText3}"
+    Shell.NavBarHasShadow="False"
+    Title="Vision Edit">
 
+    <!-- ── Flyout header ──────────────────────────────────────────────── -->
+    <Shell.FlyoutHeader>
+        <Grid RowDefinitions="Auto,1" BackgroundColor="{StaticResource AppPanel}">
+            <VerticalStackLayout Padding="20,20,20,16" Spacing="3">
+                <Label Text="Vision Edit"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource AppText1}" />
+                <Label Text="AI-powered editor"
+                       FontSize="11"
+                       TextColor="{StaticResource AppText3}" />
+            </VerticalStackLayout>
+            <BoxView Grid.Row="1" Color="{StaticResource AppBorder}" HeightRequest="1" />
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <!-- ── Flyout footer ──────────────────────────────────────────────── -->
     <Shell.FlyoutFooter>
-        <StackLayout Padding="15" Spacing="10">
-            <Button Text="Logout"
-                    IsVisible="{Binding UserManager.IsLoggedIn}" 
-                    Command="{Binding LogoutCommand}"/>
-        </StackLayout>
+        <Grid RowDefinitions="1,Auto"
+              IsVisible="{Binding UserManager.IsLoggedIn}"
+              BackgroundColor="{StaticResource AppPanel}">
+            <BoxView Grid.Row="0" Color="{StaticResource AppBorder}" HeightRequest="1" />
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="*,Auto"
+                  Padding="16,12">
+                <VerticalStackLayout Grid.Column="0" Spacing="1" VerticalOptions="Center">
+                    <Label Text="{Binding UserManager.Username}"
+                           TextColor="{StaticResource AppText1}"
+                           FontSize="12" FontAttributes="Bold" />
+                    <Label Text="Logged in"
+                           TextColor="{StaticResource AppText3}"
+                           FontSize="10" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1"
+                        Text="Sign out"
+                        Command="{Binding LogoutCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource AppText3}"
+                        FontSize="11"
+                        Padding="8,4"
+                        MinimumHeightRequest="0" HeightRequest="30"
+                        BorderWidth="0" />
+            </Grid>
+        </Grid>
     </Shell.FlyoutFooter>
 
+    <!-- ── Pages ──────────────────────────────────────────────────────── -->
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate views:MainPage}"
-        Route="MainPage" />
-    
-    <ShellContent
-        Title="Register"
-        ContentTemplate="{DataTemplate views:RegistrationPage}"
-        Route="RegistrationPage" 
-        IsVisible="{Binding UserManager.IsLoggedIn, Converter={toolkit:InvertedBoolConverter}}" />
+        Title="Editor"
+        ContentTemplate="{DataTemplate views:EditorPage}"
+        IsVisible="{Binding UserManager.IsLoggedIn}"
+        Route="Editor" />
 
     <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate views:LoginPage}"
         Route="Login"
-        IsVisible="{Binding UserManager.IsLoggedIn, Converter={toolkit:InvertedBoolConverter}}"
-        />
+        IsVisible="{Binding UserManager.IsLoggedIn, Converter={toolkit:InvertedBoolConverter}}" />
 
     <ShellContent
-        Title="Editor"
-        ContentTemplate="{DataTemplate views:EditorPage}"
-        Route="Editor"
-        />
+        Title="Register"
+        ContentTemplate="{DataTemplate views:RegistrationPage}"
+        Route="RegistrationPage"
+        IsVisible="{Binding UserManager.IsLoggedIn, Converter={toolkit:InvertedBoolConverter}}" />
+
+    <ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate views:MainPage}"
+        Route="MainPage" />
 
 </Shell>

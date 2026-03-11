@@ -1,55 +1,96 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:Vision_Edit.ViewModels"
              x:Class="Vision_Edit.Views.LoginPage"
              x:DataType="viewmodels:LoginViewModel"
-             Title="Login">
+             Title="Login"
+             BackgroundColor="{StaticResource AppBg}">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#0A0B15" Offset="0.0" />
+            <GradientStop Color="#09090E" Offset="0.6" />
+            <GradientStop Color="#12132A" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="14">
+        <Grid Padding="24,40">
+            <Border Stroke="{StaticResource AppBorderStrong}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    BackgroundColor="{StaticResource AppPanel}"
+                    Padding="22"
+                    MaximumWidthRequest="460"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
 
-            <Label Text="Sign in"
-                   Style="{StaticResource Headline}" />
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Welcome back"
+                           FontSize="30"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource AppText1}" />
 
-            <Label Text="Enter your credentials to continue."
-                   Opacity="0.7" />
+                    <Label Text="Sign in to continue editing your documents."
+                           TextColor="{StaticResource AppText2}"
+                           FontSize="13" />
 
-            <BoxView HeightRequest="1" Opacity="0.15" />
+                    <BoxView HeightRequest="1" Color="{StaticResource AppBorder}" Margin="0,4,0,6" />
 
-            <!-- Username -->
-            <VerticalStackLayout Spacing="6">
-                <Label Text="Username" FontAttributes="Bold" />
-                <Entry x:Name="UsernameEntry"
-                       Placeholder="Username"
-                       Text="{Binding Username}"
-                       ClearButtonVisibility="WhileEditing"
-                       ReturnType="Next" />
-            </VerticalStackLayout>
+                    <Label Text="Username"
+                           FontAttributes="Bold"
+                           FontSize="12"
+                           TextColor="{StaticResource AppText2}" />
+                    <Border Stroke="{StaticResource AppBorder}"
+                            StrokeShape="RoundRectangle 10"
+                            BackgroundColor="{StaticResource AppSurface}"
+                            Padding="12,6">
+                        <Entry x:Name="UsernameEntry"
+                               Placeholder="Username"
+                               Text="{Binding Username}"
+                               TextColor="{StaticResource AppText1}"
+                               PlaceholderColor="{StaticResource AppText3}"
+                               ClearButtonVisibility="WhileEditing"
+                               ReturnType="Next" />
+                    </Border>
 
-            <!-- Password -->
-            <VerticalStackLayout Spacing="6">
-                <Label Text="Password" FontAttributes="Bold" />
-                <Entry x:Name="PasswordEntry"
-                       Placeholder="••••••••"
-                       IsPassword="True"
-                       Text="{Binding Password}"
-                       ClearButtonVisibility="WhileEditing"
-                       ReturnType="Done" />
-            </VerticalStackLayout>
+                    <Label Text="Password"
+                           FontAttributes="Bold"
+                           FontSize="12"
+                           TextColor="{StaticResource AppText2}" />
+                    <Border Stroke="{StaticResource AppBorder}"
+                            StrokeShape="RoundRectangle 10"
+                            BackgroundColor="{StaticResource AppSurface}"
+                            Padding="12,6">
+                        <Entry x:Name="PasswordEntry"
+                               Placeholder="••••••••"
+                               IsPassword="True"
+                               Text="{Binding Password}"
+                               TextColor="{StaticResource AppText1}"
+                               PlaceholderColor="{StaticResource AppText3}"
+                               ClearButtonVisibility="WhileEditing"
+                               ReturnType="Done" />
+                    </Border>
 
-            <Button Text="Login"
-                    x:Name="LoginButton"
-                    Margin="0,10,0,0"
-                    Command="{Binding LoginCommand}"
-                    />
+                    <Button Text="Login"
+                            x:Name="LoginButton"
+                            Margin="0,8,0,0"
+                            HeightRequest="44"
+                            FontAttributes="Bold"
+                            BackgroundColor="{StaticResource AppAccent}"
+                            Command="{Binding LoginCommand}" />
 
-            <Button Text="Register"
-                    x:Name="RegisterButton"
-                    Opacity="0.9"
-                    Command="{Binding RedirectToRegisterPageCommand}" 
-                    />
-
-        </VerticalStackLayout>
+                    <Button Text="Create account"
+                            x:Name="RegisterButton"
+                            HeightRequest="42"
+                            BackgroundColor="Transparent"
+                            BorderColor="{StaticResource AppBorderStrong}"
+                            BorderWidth="1"
+                            TextColor="{StaticResource AppText2}"
+                            Command="{Binding RedirectToRegisterPageCommand}" />
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
     </ScrollView>
 </ContentPage>

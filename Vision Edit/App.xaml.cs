@@ -6,13 +6,17 @@ namespace Vision_Edit;
 
 public partial class App : Application
 {
-    public App(AppShell appShell)
+    private readonly IServiceProvider _services;
+
+    public App(IServiceProvider services)
     {
+        _services = services;
         InitializeComponent();
     }
+
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        var appShell = Handler?.MauiContext?.Services.GetService<AppShell>();
-        return new Window(appShell ?? new AppShell(new AppShellViewModel(new UserManager())));
+        var appShell = _services.GetRequiredService<AppShell>();
+        return new Window(appShell);
     }
 }
