@@ -31,13 +31,13 @@
 
     <!-- Custom flyout item template -->
     <Shell.ItemTemplate>
-        <DataTemplate>
+        <DataTemplate x:DataType="BaseShellItem">
             <Grid ColumnDefinitions="40,*"
                   HeightRequest="44"
                   BackgroundColor="Transparent"
                   Padding="12,0">
                 <Label Grid.Column="0"
-                       Text="{Binding Icon}"
+                       Text="{Binding ClassId}"
                        FontSize="14"
                        HorizontalOptions="Center"
                        VerticalOptions="Center"
@@ -120,7 +120,7 @@
     <!-- Workspace (default when logged in) -->
     <ShellContent
         Title="Workspace"
-        Icon="⬛"
+        ClassId="⬛"
         ContentTemplate="{DataTemplate views:WorkspacePage}"
         IsVisible="{Binding UserManager.IsLoggedIn}"
         Route="Workspace"/>
@@ -128,7 +128,7 @@
     <!-- Standalone Editor -->
     <ShellContent
         Title="Editor"
-        Icon="✏️"
+        ClassId="✏️"
         ContentTemplate="{DataTemplate views:EditorPage}"
         IsVisible="{Binding UserManager.IsLoggedIn}"
         Route="Editor"/>
@@ -136,7 +136,7 @@
     <!-- Standalone Chat -->
     <ShellContent
         Title="Chat"
-        Icon="💬"
+        ClassId="💬"
         ContentTemplate="{DataTemplate views:ChatPage}"
         IsVisible="{Binding UserManager.IsLoggedIn}"
         Route="Chat"/>
@@ -157,7 +157,7 @@
 
     <ShellContent
         Title="Home"
-        Icon="🏠"
+        ClassId="🏠"
         ContentTemplate="{DataTemplate views:MainPage}"
         Route="MainPage"/>
 

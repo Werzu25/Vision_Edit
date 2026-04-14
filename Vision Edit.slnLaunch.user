@@ -10,7 +10,7 @@
       {
         "Path": "Vision Edit\\Vision Edit.csproj",
         "Action": "Start",
-        "DebugTarget": "Windows Machine"
+        "DebugTarget": "Pixel 7 - API 36.0 (Android 16.0 - API 36)"
       }
     ]
   }

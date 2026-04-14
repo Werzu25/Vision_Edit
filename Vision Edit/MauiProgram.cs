@@ -2,6 +2,7 @@ using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Handlers;
+using Microsoft.Maui.Storage;
 using Tools;
 using Vision_Edit.ViewModels;
 using Vision_Edit.Views;
@@ -15,7 +16,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
 
         builder.Services.AddHttpClient("Base", c =>
-            c.BaseAddress = new Uri("https://localhost:44311/api/"));
+            c.BaseAddress = new Uri("https://ksw8zcnv-44311.euw.devtunnels.ms/api/"));
 
         builder
             .UseMauiApp<App>()
@@ -33,7 +34,7 @@ public static class MauiProgram
 
         // Core singletons
         builder.Services.AddSingleton<UserManager>();
-        builder.Services.AddSingleton<ApiHandler>();
+        builder.Services.AddSingleton(sp => CreateApiHandler());
         builder.Services.AddSingleton<EditorViewModel>();
 
         // Shell
@@ -45,6 +46,7 @@ public static class MauiProgram
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<RegistrationPage>();
         builder.Services.AddTransient<RegistrationViewModel>();
+        builder.Services.AddTransient<ApiKeyPopupPage>();
 
         // Editor page (standalone)
         builder.Services.AddTransient<EditorPage>();
@@ -111,4 +113,17 @@ public static class MauiProgram
 #endif
         return builder.Build();
     }
+
+    /// <summary>
+    /// Factory method to create ApiHandler with API key from secure storage.
+    /// If no key is stored, returns a placeholder that will be initialized later.
+    /// </summary>
+    private static ApiHandler CreateApiHandler()
+    {
+        var apiKey = SecureStorage.Default.GetAsync("openai_api_key")
+            .GetAwaiter().GetResult() ?? string.Empty;
+
+        return new ApiHandler(apiKey);
+    }
 }
+

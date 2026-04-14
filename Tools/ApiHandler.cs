@@ -19,9 +19,15 @@ public class ApiHandler
         "Reply in plain text only — no markdown, no code fences, no bullet symbols. " +
         "Be concise and direct.";
 
-    public ApiHandler()
+    /// <summary>
+    /// Constructor requires the OpenAI API key to be provided.
+    /// Set via app startup using SecureStorage.
+    /// </summary>
+    public ApiHandler(string apiKey)
     {
-        string apiKey     = Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(apiKey))
+            throw new ArgumentException("API key cannot be null or empty.", nameof(apiKey));
+
         _chatClient       = new ChatClient(ChatModel, apiKey);
         _completionClient = new ResponsesClient(CompletionModel, apiKey);
     }

@@ -82,4 +82,10 @@
       <ProjectReference Include="..\Tools\Tools.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <MauiXaml Update="Views\ApiKeyPopupPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+    </ItemGroup>
+
 </Project>
