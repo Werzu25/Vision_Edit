@@ -14,9 +14,11 @@ public class Document : ControllerBase
 
     public Document(DbManager dbManager)
     {
-        _dbManager = dbManager;
+        _dbManager   = dbManager;
         _userService = new UserService(dbManager);
     }
+
+    // ── Save (upsert) ──────────────────────────────────────────────────────
 
     [HttpPost("save")]
     public async Task<IActionResult> Save([FromBody] SaveDocumentModel model)
@@ -25,8 +27,7 @@ public class Document : ControllerBase
             return BadRequest("Username is required.");
 
         var user = await _userService.GetUserByUsername(model.Username);
-        if (user == null)
-            return Unauthorized();
+        if (user == null) return Unauthorized();
 
         string name = string.IsNullOrWhiteSpace(model.Name) ? "Untitled" : model.Name.Trim();
 
@@ -38,10 +39,10 @@ public class Document : ControllerBase
         {
             var created = (await _dbManager.Documents.AddAsync(new DocumentModel
             {
-                Name = name,
-                Content = model.Content ?? string.Empty,
+                Name         = name,
+                Content      = model.Content ?? string.Empty,
                 CreationDate = DateTime.UtcNow,
-                User = user
+                User         = user
             })).Entity;
 
             if (await _dbManager.SaveChangesAsync() <= 0)
@@ -56,5 +57,50 @@ public class Document : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError);
 
         return Ok(new { existing.Id, existing.Name, existing.CreationDate });
+    }
+
+    // ── List documents for a user ──────────────────────────────────────────
+
+    [HttpGet("list/{username}")]
+    public async Task<IActionResult> List(string username)
+    {
+        if (string.IsNullOrWhiteSpace(username))
+            return BadRequest("Username is required.");
+
+        var user = await _userService.GetUserByUsername(username);
+        if (user == null) return Unauthorized();
+
+        var docs = await _dbManager.Documents
+            .Where(d => d.User.Id == user.Id)
+            .OrderByDescending(d => d.CreationDate)
+            .Select(d => new DocumentSummaryModel
+            {
+                Id           = d.Id,
+                Name         = d.Name,
+                CreationDate = d.CreationDate
+            })
+            .ToListAsync();
+
+        return Ok(docs);
+    }
+
+    // ── Load single document by id ─────────────────────────────────────────
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> Get(int id)
+    {
+        var doc = await _dbManager.Documents
+            .Include(d => d.User)
+            .FirstOrDefaultAsync(d => d.Id == id);
+
+        if (doc == null) return NotFound();
+
+        return Ok(new
+        {
+            doc.Id,
+            doc.Name,
+            doc.Content,
+            doc.CreationDate
+        });
     }
 }

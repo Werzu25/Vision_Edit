@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:Vision_Edit.Views"
              xmlns:viewmodels="clr-namespace:Vision_Edit.ViewModels"
-             x:Class="Vision_Edit.Views.EditorPage"
+             x:Class="Vision_Edit.Views.ChatPage"
              BackgroundColor="{StaticResource VE_BgBase}"
              Shell.NavBarIsVisible="False">
 
@@ -33,7 +33,7 @@
                                FontSize="10"
                                CharacterSpacing="4"
                                TextColor="{StaticResource VE_Text1}"/>
-                        <Label Text="EDITOR"
+                        <Label Text="AI CHAT"
                                FontFamily="OpenSansSemibold"
                                FontSize="8"
                                CharacterSpacing="3"
@@ -41,7 +41,7 @@
                     </VerticalStackLayout>
                 </HorizontalStackLayout>
 
-                <!-- Right: Switch to Chat -->
+                <!-- Right: Switch to Editor -->
                 <Border Grid.Column="2"
                         BackgroundColor="Transparent"
                         Stroke="{StaticResource VE_Border2}"
@@ -50,8 +50,8 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="3"/>
                     </Border.StrokeShape>
-                    <Button Text="OPEN CHAT →"
-                            Command="{Binding OpenChatCommand}"
+                    <Button Text="OPEN EDITOR →"
+                            Command="{Binding OpenEditorCommand}"
                             BackgroundColor="Transparent"
                             TextColor="{StaticResource VE_Text3}"
                             FontFamily="OpenSansSemibold"
@@ -64,15 +64,15 @@
             </Grid>
         </Border>
 
-        <!-- ── EDITOR CONTENT AREA ── -->
-        <Grid Grid.Row="1" Padding="16,12,16,16">
+        <!-- ── CHAT CONTENT AREA ── -->
+        <Grid Grid.Row="1" Padding="16,12,16,0">
             <Border BackgroundColor="{StaticResource VE_BgBase}"
                     Stroke="{StaticResource VE_Border2}"
                     StrokeThickness="1">
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="4"/>
+                    <RoundRectangle CornerRadius="4,4,0,0"/>
                 </Border.StrokeShape>
-                <views:EditorView VerticalOptions="Fill"/>
+                <views:ChatView x:Name="ChatArea" VerticalOptions="Fill"/>
             </Border>
         </Grid>
 

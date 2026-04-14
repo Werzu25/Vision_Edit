@@ -1,4 +1,4 @@
-﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Vision_Edit"
@@ -9,6 +9,110 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- ═══════════════════════════════════════ -->
+            <!--  VISION EDIT — GLOBAL DESIGN TOKENS     -->
+            <!-- ═══════════════════════════════════════ -->
+
+            <!-- Background Ramp -->
+            <Color x:Key="VE_BgDeep">#0A0A0A</Color>
+            <Color x:Key="VE_BgBase">#0D0C0B</Color>
+            <Color x:Key="VE_BgCard">#111111</Color>
+            <Color x:Key="VE_BgPanel">#161411</Color>
+            <Color x:Key="VE_BgInput">#141210</Color>
+            <Color x:Key="VE_BgHighlight">#1C1A16</Color>
+
+            <!-- Gold Accent Ramp -->
+            <Color x:Key="VE_Gold">#C8A97E</Color>
+            <Color x:Key="VE_GoldMid">#9E7E56</Color>
+            <Color x:Key="VE_GoldDim">#7A6248</Color>
+            <Color x:Key="VE_GoldFaint">#3A3026</Color>
+
+            <!-- Text Ramp -->
+            <Color x:Key="VE_Text1">#F0ECE4</Color>
+            <Color x:Key="VE_Text2">#A8A298</Color>
+            <Color x:Key="VE_Text3">#787066</Color>
+            <Color x:Key="VE_Text4">#3D3A35</Color>
+
+            <!-- Border Ramp -->
+            <Color x:Key="VE_Border1">#2A2720</Color>
+            <Color x:Key="VE_Border2">#1E1C18</Color>
+            <Color x:Key="VE_BorderFaint">#141210</Color>
+            <Color x:Key="VE_Divider">#252320</Color>
+
+            <!-- Semantic -->
+            <Color x:Key="VE_Error">#C0553A</Color>
+            <Color x:Key="VE_ErrorDim">#7A2E1A</Color>
+            <Color x:Key="VE_Warning">#B8862A</Color>
+            <Color x:Key="VE_Success">#4A7A52</Color>
+
+            <!-- ═══════════════════════════════════════ -->
+            <!--  GLOBAL STYLES                          -->
+            <!-- ═══════════════════════════════════════ -->
+
+            <!-- Mono label (caps, spaced) -->
+            <Style x:Key="VE_CapsLabel" TargetType="Label">
+                <Setter Property="FontFamily" Value="SpaceMono"/>
+                <Setter Property="FontSize" Value="9"/>
+                <Setter Property="CharacterSpacing" Value="4"/>
+                <Setter Property="TextColor" Value="{StaticResource VE_Text3}"/>
+            </Style>
+
+            <!-- Body text -->
+            <Style x:Key="VE_BodyLabel" TargetType="Label">
+                <Setter Property="FontFamily" Value="SpaceMono"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="TextColor" Value="{StaticResource VE_Text2}"/>
+                <Setter Property="LineHeight" Value="1.6"/>
+            </Style>
+
+            <!-- Input field entry -->
+            <Style x:Key="VE_Entry" TargetType="Entry">
+                <Setter Property="TextColor" Value="{StaticResource VE_Text1}"/>
+                <Setter Property="PlaceholderColor" Value="{StaticResource VE_Text4}"/>
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="FontFamily" Value="SpaceMono"/>
+                <Setter Property="FontSize" Value="13"/>
+            </Style>
+
+            <!-- Primary gold CTA button -->
+            <Style x:Key="VE_BtnPrimary" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource VE_Gold}"/>
+                <Setter Property="TextColor" Value="#0A0A0A"/>
+                <Setter Property="FontFamily" Value="SpaceMonoBold"/>
+                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="CharacterSpacing" Value="3"/>
+                <Setter Property="CornerRadius" Value="2"/>
+                <Setter Property="HeightRequest" Value="50"/>
+            </Style>
+
+            <!-- Ghost / outline button -->
+            <Style x:Key="VE_BtnGhost" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="TextColor" Value="{StaticResource VE_Text3}"/>
+                <Setter Property="BorderColor" Value="{StaticResource VE_Border2}"/>
+                <Setter Property="BorderWidth" Value="1"/>
+                <Setter Property="FontFamily" Value="SpaceMono"/>
+                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="CharacterSpacing" Value="2"/>
+                <Setter Property="CornerRadius" Value="2"/>
+                <Setter Property="HeightRequest" Value="44"/>
+            </Style>
+
+            <!-- Icon toolbar button -->
+            <Style x:Key="VE_BtnIcon" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="TextColor" Value="{StaticResource VE_Text3}"/>
+                <Setter Property="BorderColor" Value="{StaticResource VE_Border2}"/>
+                <Setter Property="BorderWidth" Value="1"/>
+                <Setter Property="FontFamily" Value="SpaceMono"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="CornerRadius" Value="2"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="HeightRequest" Value="30"/>
+                <Setter Property="WidthRequest" Value="30"/>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

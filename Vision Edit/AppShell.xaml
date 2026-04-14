@@ -8,81 +8,157 @@
     xmlns:viewmodels="clr-namespace:Vision_Edit.ViewModels"
     x:DataType="viewmodels:AppShellViewModel"
     FlyoutBehavior="Flyout"
-    Shell.BackgroundColor="{StaticResource AppPanel}"
-    Shell.ForegroundColor="{StaticResource AppAccentLight}"
-    Shell.TitleColor="{StaticResource AppText1}"
-    Shell.UnselectedColor="{StaticResource AppText3}"
+    FlyoutBackgroundColor="{StaticResource VE_BgPanel}"
+    Shell.BackgroundColor="{StaticResource VE_BgPanel}"
+    Shell.ForegroundColor="{StaticResource VE_Gold}"
+    Shell.TitleColor="{StaticResource VE_Text1}"
+    Shell.UnselectedColor="{StaticResource VE_Text3}"
+    Shell.DisabledColor="{StaticResource VE_Text4}"
     Shell.NavBarHasShadow="False"
+    Shell.TabBarBackgroundColor="{StaticResource VE_BgPanel}"
+    Shell.TabBarForegroundColor="{StaticResource VE_Gold}"
+    Shell.TabBarUnselectedColor="{StaticResource VE_Text3}"
     Title="Vision Edit">
 
-    <!-- ── Flyout header ──────────────────────────────────────────────── -->
+    <Shell.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <Style x:Key="FlyoutItemStyle" TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+            </Style>
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <!-- Custom flyout item template -->
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid ColumnDefinitions="40,*"
+                  HeightRequest="44"
+                  BackgroundColor="Transparent"
+                  Padding="12,0">
+                <Label Grid.Column="0"
+                       Text="{Binding Icon}"
+                       FontSize="14"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="{StaticResource VE_Text3}"/>
+                <Label Grid.Column="1"
+                       Text="{Binding Title}"
+                       FontFamily="OpenSansSemibold"
+                       FontSize="12"
+                       CharacterSpacing="1"
+                       VerticalOptions="Center"
+                       TextColor="{StaticResource VE_Text2}"/>
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <!-- Flyout Header -->
     <Shell.FlyoutHeader>
-        <Grid RowDefinitions="Auto,1" BackgroundColor="{StaticResource AppPanel}">
+        <Grid RowDefinitions="Auto,1" BackgroundColor="{StaticResource VE_BgPanel}">
             <VerticalStackLayout Padding="20,20,20,16" Spacing="3">
-                <Label Text="Vision Edit"
-                       FontSize="16"
-                       FontAttributes="Bold"
-                       TextColor="{StaticResource AppText1}" />
-                <Label Text="AI-powered editor"
+                <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                    <BoxView WidthRequest="3"
+                             HeightRequest="16"
+                             BackgroundColor="{StaticResource VE_GoldDim}"
+                             VerticalOptions="Center"/>
+                    <Label Text="VISION EDIT"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="14"
+                           CharacterSpacing="3"
+                           TextColor="{StaticResource VE_Text1}"/>
+                </HorizontalStackLayout>
+                <Label Text="AI-powered document editor"
+                       FontFamily="OpenSansRegular"
                        FontSize="11"
-                       TextColor="{StaticResource AppText3}" />
+                       TextColor="{StaticResource VE_Text4}"
+                       Margin="11,0,0,0"/>
             </VerticalStackLayout>
-            <BoxView Grid.Row="1" Color="{StaticResource AppBorder}" HeightRequest="1" />
+            <BoxView Grid.Row="1" Color="{StaticResource VE_Border2}" HeightRequest="1"/>
         </Grid>
     </Shell.FlyoutHeader>
 
-    <!-- ── Flyout footer ──────────────────────────────────────────────── -->
+    <!-- Flyout Footer — only shown when logged in -->
     <Shell.FlyoutFooter>
         <Grid RowDefinitions="1,Auto"
               IsVisible="{Binding UserManager.IsLoggedIn}"
-              BackgroundColor="{StaticResource AppPanel}">
-            <BoxView Grid.Row="0" Color="{StaticResource AppBorder}" HeightRequest="1" />
+              BackgroundColor="{StaticResource VE_BgPanel}">
+            <BoxView Grid.Row="0" Color="{StaticResource VE_Border2}" HeightRequest="1"/>
             <Grid Grid.Row="1"
                   ColumnDefinitions="*,Auto"
-                  Padding="16,12">
-                <VerticalStackLayout Grid.Column="0" Spacing="1" VerticalOptions="Center">
+                  Padding="20,14">
+                <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
                     <Label Text="{Binding UserManager.Username}"
-                           TextColor="{StaticResource AppText1}"
-                           FontSize="12" FontAttributes="Bold" />
+                           FontFamily="OpenSansSemibold"
+                           FontSize="12"
+                           TextColor="{StaticResource VE_Text1}"/>
                     <Label Text="Logged in"
-                           TextColor="{StaticResource AppText3}"
-                           FontSize="10" />
+                           FontFamily="OpenSansRegular"
+                           FontSize="10"
+                           TextColor="{StaticResource VE_Text4}"/>
                 </VerticalStackLayout>
                 <Button Grid.Column="1"
                         Text="Sign out"
                         Command="{Binding LogoutCommand}"
                         BackgroundColor="Transparent"
-                        TextColor="{StaticResource AppText3}"
-                        FontSize="11"
-                        Padding="8,4"
-                        MinimumHeightRequest="0" HeightRequest="30"
-                        BorderWidth="0" />
+                        TextColor="{StaticResource VE_GoldDim}"
+                        FontFamily="OpenSansSemibold"
+                        FontSize="10"
+                        CharacterSpacing="1"
+                        Padding="10,6"
+                        MinimumHeightRequest="0"
+                        HeightRequest="32"
+                        BorderWidth="1"
+                        BorderColor="{StaticResource VE_Border2}"
+                        CornerRadius="3"/>
             </Grid>
         </Grid>
     </Shell.FlyoutFooter>
 
-    <!-- ── Pages ──────────────────────────────────────────────────────── -->
+    <!-- ── Logged-in routes ── -->
+
+    <!-- Workspace (default when logged in) -->
+    <ShellContent
+        Title="Workspace"
+        Icon="⬛"
+        ContentTemplate="{DataTemplate views:WorkspacePage}"
+        IsVisible="{Binding UserManager.IsLoggedIn}"
+        Route="Workspace"/>
+
+    <!-- Standalone Editor -->
     <ShellContent
         Title="Editor"
+        Icon="✏️"
         ContentTemplate="{DataTemplate views:EditorPage}"
         IsVisible="{Binding UserManager.IsLoggedIn}"
-        Route="Editor" />
+        Route="Editor"/>
+
+    <!-- Standalone Chat -->
+    <ShellContent
+        Title="Chat"
+        Icon="💬"
+        ContentTemplate="{DataTemplate views:ChatPage}"
+        IsVisible="{Binding UserManager.IsLoggedIn}"
+        Route="Chat"/>
+
+    <!-- ── Logged-out routes ── -->
 
     <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate views:LoginPage}"
         Route="Login"
-        IsVisible="{Binding UserManager.IsLoggedIn, Converter={toolkit:InvertedBoolConverter}}" />
+        IsVisible="{Binding UserManager.IsLoggedIn, Converter={StaticResource InvertedBoolConverter}}"/>
 
     <ShellContent
         Title="Register"
         ContentTemplate="{DataTemplate views:RegistrationPage}"
         Route="RegistrationPage"
-        IsVisible="{Binding UserManager.IsLoggedIn, Converter={toolkit:InvertedBoolConverter}}" />
+        IsVisible="{Binding UserManager.IsLoggedIn, Converter={StaticResource InvertedBoolConverter}}"/>
 
     <ShellContent
         Title="Home"
+        Icon="🏠"
         ContentTemplate="{DataTemplate views:MainPage}"
-        Route="MainPage" />
+        Route="MainPage"/>
 
 </Shell>

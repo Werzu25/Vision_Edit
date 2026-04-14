@@ -34,12 +34,12 @@ namespace Vision_Edit_API.Controllers
             return "value";
         }
         
-        // GET api/<User>/login}
+        // POST api/<User>/login
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel login)
         {
-            UserModel user = await _userService.LoginUser(login);
-            if (user == null)
+            UserModel? user = await _userService.LoginUser(login);
+            if (user is null)
                 return Unauthorized();
             return Ok(user);
         }
@@ -49,17 +49,18 @@ namespace Vision_Edit_API.Controllers
         public async Task<IActionResult> Post([FromBody] UserModel user)
         {
             var users = await _userService.GetAllUsers();
-            if (!Validation.ValidUsername(user.Username,users.Select(u => u.Username).ToList()))
+            if (!Validation.ValidUsername(user.Username, users.Select(u => u.Username).ToList()))
                 ModelState.AddModelError("Username", "Username already exists");
             if (!Validation.ValidString(user.Username, 3))
                 ModelState.AddModelError("Username", "Username must be at least 3 characters long");
-            
-            
+
             if (!ModelState.IsValid)
                 return ValidationProblem(ModelState);
+
             var response = await _userService.CreateUser(user);
-            if (user == null)
-                return NoContent();
+            if (response is null)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+
             return Created(new Uri($"{Request.Scheme}://{Request.Host}{Request.Path}/{response.Id}"), response);
         }
 

@@ -6,137 +6,292 @@
              x:Class="Vision_Edit.Views.EditorView"
              x:DataType="viewmodels:EditorViewModel">
 
-    <Grid RowDefinitions="54,46,*,Auto,26" RowSpacing="0" BackgroundColor="Transparent">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="Invert" />
+        </ResourceDictionary>
+    </ContentView.Resources>
 
-        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto" ColumnSpacing="8" Padding="12,8" BackgroundColor="{StaticResource AppPanel}">
-            <Border Grid.Column="0"
-                    Stroke="Transparent"
-                    BackgroundColor="{StaticResource AppWarning}"
-                    WidthRequest="10"
-                    HeightRequest="10"
-                    StrokeShape="RoundRectangle 10"
-                    VerticalOptions="Center"
-                    IsVisible="{Binding HasUnsavedChanges}" />
+    <Grid RowDefinitions="Auto,*,Auto,Auto" RowSpacing="0" BackgroundColor="Transparent">
 
-            <Border Grid.Column="1" Stroke="{StaticResource AppBorder}" StrokeShape="RoundRectangle 9" BackgroundColor="{StaticResource AppSurface}" Padding="10,0" HeightRequest="34" VerticalOptions="Center">
-                <Entry Text="{Binding DocumentTitle}"
+        <!-- ══════════════════════════════════════════════════════════════════
+             ROW 0  —  TOOLBAR
+        ══════════════════════════════════════════════════════════════════ -->
+        <Border Grid.Row="0"
+                BackgroundColor="{StaticResource VE_BgPanel}"
+                Stroke="{StaticResource VE_Border2}"
+                StrokeThickness="0,0,0,1"
+                Padding="10,0">
+            <Border.StrokeShape><RoundRectangle CornerRadius="3,3,0,0"/></Border.StrokeShape>
+
+            <!--  Title | OPEN  SAVE  ···  •  |  − size +  -->
+            <Grid ColumnDefinitions="*,1,Auto,4,Auto,4,Auto,8,Auto,8,Auto"
+                  HeightRequest="38"
+                  VerticalOptions="Center">
+
+                <!-- Document title -->
+                <Entry Grid.Column="0"
+                       Text="{Binding DocumentTitle}"
                        Placeholder="Untitled"
                        BackgroundColor="Transparent"
-                       TextColor="{StaticResource AppText1}"
-                       PlaceholderColor="{StaticResource AppText3}"
-                       FontAttributes="Bold"
-                       FontSize="13"
-                       ClearButtonVisibility="WhileEditing" />
-            </Border>
+                       TextColor="{StaticResource VE_Text1}"
+                       PlaceholderColor="{StaticResource VE_Text4}"
+                       FontFamily="OpenSansSemibold"
+                       FontSize="12"
+                       MinimumHeightRequest="0"
+                       MinimumWidthRequest="0"
+                       ClearButtonVisibility="WhileEditing"
+                       VerticalOptions="Center"/>
 
-            <Button Grid.Column="2" Text="New" Command="{Binding NewDocumentCommand}" BackgroundColor="Transparent" TextColor="{StaticResource AppText2}" HeightRequest="30" Padding="8,0" />
-            <Button Grid.Column="3" Text="Open" Command="{Binding OpenDocumentCommand}" BackgroundColor="Transparent" TextColor="{StaticResource AppText2}" HeightRequest="30" Padding="8,0" />
-            <Button Grid.Column="4" Text="Save" Command="{Binding SaveDocumentCommand}" BackgroundColor="{StaticResource AppAccentDim}" TextColor="White" FontAttributes="Bold" HeightRequest="30" Padding="12,0" />
-            <Button Grid.Column="5" Text="⋯" Command="{Binding SaveDocumentAsCommand}" BackgroundColor="Transparent" TextColor="{StaticResource AppText2}" HeightRequest="30" WidthRequest="30" Padding="0" />
-        </Grid>
+                <!-- Divider -->
+                <BoxView Grid.Column="1"
+                         WidthRequest="1"
+                         HeightRequest="16"
+                         BackgroundColor="{StaticResource VE_Border2}"
+                         VerticalOptions="Center"/>
 
-        <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto,1,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto,Auto" ColumnSpacing="6" Padding="12,8" BackgroundColor="{StaticResource AppPanel}">
-            <Button Grid.Column="0" Text="−" Command="{Binding DecreaseFontSizeCommand}" WidthRequest="24" HeightRequest="24" Padding="0" BackgroundColor="{StaticResource AppSurface}" TextColor="{StaticResource AppText2}" FontAttributes="Bold" />
-            <Label Grid.Column="1" Text="{Binding FontSize, StringFormat='{0:F0}'}" WidthRequest="28" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="12" TextColor="{StaticResource AppText2}" />
-            <Button Grid.Column="2" Text="+" Command="{Binding IncreaseFontSizeCommand}" WidthRequest="24" HeightRequest="24" Padding="0" BackgroundColor="{StaticResource AppSurface}" TextColor="{StaticResource AppText2}" FontAttributes="Bold" />
+                <!-- OPEN -->
+                <Button Grid.Column="2"
+                        Text="OPEN"
+                        Command="{Binding LoadDocumentCommand}"
+                        Style="{StaticResource VE_BtnIcon}"
+                        HeightRequest="24"
+                        WidthRequest="42"
+                        FontSize="8"
+                        CharacterSpacing="2"/>
 
-            <BoxView Grid.Column="3" WidthRequest="1" HeightRequest="20" VerticalOptions="Center" Color="{StaticResource AppBorder}" />
+                <!-- SAVE -->
+                <Button Grid.Column="4"
+                        Text="SAVE"
+                        Command="{Binding SaveDocumentCommand}"
+                        Style="{StaticResource VE_BtnPrimary}"
+                        HeightRequest="24"
+                        WidthRequest="46"
+                        FontSize="8"
+                        CharacterSpacing="2"
+                        Padding="0"/>
 
-            <Border Grid.Column="4" WidthRequest="16" HeightRequest="16" StrokeShape="Ellipse" StrokeThickness="0" BackgroundColor="#E8E9F3" VerticalOptions="Center"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SetFontColorCommand}" CommandParameter="#E8E9F3" /></Border.GestureRecognizers></Border>
-            <Border Grid.Column="5" WidthRequest="16" HeightRequest="16" StrokeShape="Ellipse" StrokeThickness="0" BackgroundColor="#3DFF88" VerticalOptions="Center"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SetFontColorCommand}" CommandParameter="#3DFF88" /></Border.GestureRecognizers></Border>
-            <Border Grid.Column="6" WidthRequest="16" HeightRequest="16" StrokeShape="Ellipse" StrokeThickness="0" BackgroundColor="#FFD060" VerticalOptions="Center"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SetFontColorCommand}" CommandParameter="#FFD060" /></Border.GestureRecognizers></Border>
-            <Border Grid.Column="7" WidthRequest="16" HeightRequest="16" StrokeShape="Ellipse" StrokeThickness="0" BackgroundColor="#40C8FF" VerticalOptions="Center"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SetFontColorCommand}" CommandParameter="#40C8FF" /></Border.GestureRecognizers></Border>
-            <Border Grid.Column="8" WidthRequest="16" HeightRequest="16" StrokeShape="Ellipse" StrokeThickness="0" BackgroundColor="#C080FF" VerticalOptions="Center"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SetFontColorCommand}" CommandParameter="#C080FF" /></Border.GestureRecognizers></Border>
-            <Border Grid.Column="9" WidthRequest="16" HeightRequest="16" StrokeShape="Ellipse" StrokeThickness="0" BackgroundColor="#FF7060" VerticalOptions="Center"><Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SetFontColorCommand}" CommandParameter="#FF7060" /></Border.GestureRecognizers></Border>
+                <!-- Save as (···) -->
+                <Button Grid.Column="6"
+                        Text="···"
+                        Command="{Binding SaveDocumentAsCommand}"
+                        Style="{StaticResource VE_BtnIcon}"
+                        FontSize="13"
+                        HeightRequest="24"
+                        WidthRequest="24"/>
 
-            <Border Grid.Column="11"
-                    Padding="10,4"
-                    StrokeShape="RoundRectangle 7"
-                    StrokeThickness="1"
-                    VerticalOptions="Center">
-                <Border.Triggers>
-                    <DataTrigger TargetType="Border" Binding="{Binding IsCompletionEnabled}" Value="True">
-                        <Setter Property="Stroke" Value="{StaticResource AppAccent}" />
-                        <Setter Property="BackgroundColor" Value="{StaticResource AppAccentSoft}" />
-                    </DataTrigger>
-                    <DataTrigger TargetType="Border" Binding="{Binding IsCompletionEnabled}" Value="False">
-                        <Setter Property="Stroke" Value="{StaticResource AppBorder}" />
-                        <Setter Property="BackgroundColor" Value="{StaticResource AppSurface}" />
-                    </DataTrigger>
-                </Border.Triggers>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ToggleCompletionCommand}" />
-                </Border.GestureRecognizers>
-                <Label FontSize="11" FontAttributes="Bold" VerticalOptions="Center">
-                    <Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding IsCompletionEnabled}" Value="True">
-                            <Setter Property="Text" Value="⚡ Inline AI ON" />
-                            <Setter Property="TextColor" Value="{StaticResource AppAccentLight}" />
-                        </DataTrigger>
-                        <DataTrigger TargetType="Label" Binding="{Binding IsCompletionEnabled}" Value="False">
-                            <Setter Property="Text" Value="⚡ Inline AI OFF" />
-                            <Setter Property="TextColor" Value="{StaticResource AppText3}" />
-                        </DataTrigger>
-                    </Label.Triggers>
-                </Label>
-            </Border>
+                <!-- Unsaved dot -->
+                <Border Grid.Column="8"
+                        WidthRequest="5"
+                        HeightRequest="5"
+                        BackgroundColor="{StaticResource VE_GoldDim}"
+                        IsVisible="{Binding HasUnsavedChanges}"
+                        VerticalOptions="Center">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="5"/></Border.StrokeShape>
+                </Border>
 
-            <Button Grid.Column="12"
-                    Text="Generate"
-                    Command="{Binding RequestCompletionCommand}"
-                    IsVisible="{Binding IsCompletionEnabled}"
-                    IsEnabled="{Binding IsLoadingCompletion, Converter={toolkit:InvertedBoolConverter}}"
-                    BackgroundColor="{StaticResource AppAccentDim}"
-                    TextColor="White"
-                    FontSize="11"
-                    HeightRequest="28"
-                    Padding="12,0" />
-        </Grid>
+                <!-- Font-size stepper -->
+                <HorizontalStackLayout Grid.Column="10"
+                                       Spacing="0"
+                                       VerticalOptions="Center">
+                    <Button Text="−"
+                            Command="{Binding DecreaseFontSizeCommand}"
+                            Style="{StaticResource VE_BtnIcon}"
+                            HeightRequest="24"
+                            WidthRequest="24"/>
+                    <Label Text="{Binding FontSize, StringFormat='{0:F0}'}"
+                           WidthRequest="24"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="10"
+                           TextColor="{StaticResource VE_Text3}"/>
+                    <Button Text="+"
+                            Command="{Binding IncreaseFontSizeCommand}"
+                            Style="{StaticResource VE_BtnIcon}"
+                            HeightRequest="24"
+                            WidthRequest="24"/>
+                </HorizontalStackLayout>
 
-        <Border Grid.Row="2"
-                Margin="10,8,10,8"
-                Stroke="{StaticResource AppBorder}"
-                StrokeShape="RoundRectangle 10"
-                StrokeThickness="1"
-                BackgroundColor="{StaticResource EditorBg}">
+            </Grid>
+        </Border>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             ROW 1  —  EDITOR SURFACE
+        ══════════════════════════════════════════════════════════════════ -->
+        <Border Grid.Row="1"
+                BackgroundColor="{StaticResource VE_BgBase}"
+                Stroke="Transparent"
+                StrokeThickness="0"
+                Padding="24,16">
+            <Border.StrokeShape><RoundRectangle CornerRadius="0"/></Border.StrokeShape>
             <Editor x:Name="MainEditor"
                     Text="{Binding Text, Mode=TwoWay}"
                     CursorPosition="{Binding CursorPosition, Mode=TwoWay}"
                     SelectionLength="{Binding SelectionLength, Mode=TwoWay}"
                     FontSize="{Binding FontSize}"
                     TextColor="{Binding FontColor}"
-                    FontFamily="Courier New"
+                    FontFamily="OpenSansRegular"
                     BackgroundColor="Transparent"
-                    Placeholder="Start typing..."
-                    PlaceholderColor="{StaticResource AppText3}"
-                    Margin="10,8"
+                    IsReadOnly="False"
+                    IsEnabled="True"
+                    Placeholder="Begin your document…"
+                    PlaceholderColor="{StaticResource VE_Text4}"
                     HorizontalOptions="Fill"
-                    VerticalOptions="Fill">
-                <Editor.Behaviors>
-                    <toolkit:EventToCommandBehavior EventName="Unfocused" Command="{Binding SetSelectedTextCommand}" />
-                </Editor.Behaviors>
-            </Editor>
+                    VerticalOptions="Fill"
+                    AutoSize="Disabled"/>
         </Border>
 
-        <Border Grid.Row="3"
-                Margin="10,0,10,8"
-                Padding="12,8"
-                Stroke="{StaticResource AppBorderStrong}"
-                StrokeThickness="1"
-                StrokeShape="RoundRectangle 9"
-                BackgroundColor="#101229"
-                IsVisible="{Binding IsCompletionVisible}">
-            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
-                <ActivityIndicator Grid.Column="0" IsRunning="{Binding IsLoadingCompletion}" IsVisible="{Binding IsLoadingCompletion}" Color="{StaticResource AppAccent}" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
-                <Label Grid.Column="1" Text="{Binding CompletionSuggestion}" TextColor="#9EA2CF" FontFamily="Courier New" FontSize="{Binding FontSize}" FontAttributes="Italic" LineBreakMode="TailTruncation" VerticalOptions="Center" />
-                <Button Grid.Column="2" Text="Tab to accept" Command="{Binding AcceptCompletionCommand}" HeightRequest="24" Padding="10,0" FontSize="11" BackgroundColor="{StaticResource AppAccentSoft}" TextColor="{StaticResource AppAccentLight}" />
-                <Button Grid.Column="3" Text="✕" Command="{Binding DismissCompletionCommand}" WidthRequest="26" HeightRequest="24" Padding="0" BackgroundColor="Transparent" TextColor="{StaticResource AppText3}" />
+        <!-- ══════════════════════════════════════════════════════════════════
+             ROW 2  —  AI COMPLETION PANEL  (only shown when active)
+        ══════════════════════════════════════════════════════════════════ -->
+        <Border Grid.Row="2"
+                BackgroundColor="{StaticResource VE_BgCard}"
+                Stroke="{StaticResource VE_GoldDim}"
+                StrokeThickness="0,1,0,0"
+                IsVisible="{Binding IsCompletionVisible}"
+                Padding="0">
+            <Border.StrokeShape><RoundRectangle CornerRadius="0"/></Border.StrokeShape>
+
+            <Grid ColumnDefinitions="36,1,*,Auto" HeightRequest="32">
+
+                <!-- AI badge / spinner -->
+                <Grid Grid.Column="0" BackgroundColor="{StaticResource VE_BgPanel}">
+                    <ActivityIndicator IsRunning="{Binding IsLoadingCompletion}"
+                                       IsVisible="{Binding IsLoadingCompletion}"
+                                       Color="{StaticResource VE_GoldDim}"
+                                       WidthRequest="12"
+                                       HeightRequest="12"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                    <Label Text="AI"
+                           IsVisible="{Binding IsLoadingCompletion, Converter={StaticResource Invert}}"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="7"
+                           CharacterSpacing="2"
+                           TextColor="{StaticResource VE_GoldDim}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                </Grid>
+
+                <BoxView Grid.Column="1"
+                         WidthRequest="1"
+                         BackgroundColor="{StaticResource VE_Border2}"
+                         VerticalOptions="Fill"/>
+
+                <!-- Suggestion text -->
+                <Label Grid.Column="2"
+                       Text="{Binding CompletionSuggestion}"
+                       TextColor="{StaticResource VE_Text3}"
+                       FontFamily="OpenSansRegular"
+                       FontSize="11"
+                       FontAttributes="Italic"
+                       LineBreakMode="TailTruncation"
+                       MaxLines="1"
+                       VerticalOptions="Center"
+                       Margin="10,0"/>
+
+                <!-- Accept / dismiss buttons -->
+                <HorizontalStackLayout Grid.Column="3"
+                                       Spacing="4"
+                                       VerticalOptions="Center"
+                                       Margin="0,0,8,0">
+                    <Border BackgroundColor="Transparent"
+                            Stroke="{StaticResource VE_GoldDim}"
+                            StrokeThickness="1"
+                            Padding="0">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="2"/></Border.StrokeShape>
+                        <Button Text="↹ Accept"
+                                Command="{Binding AcceptCompletionCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource VE_Gold}"
+                                FontFamily="OpenSansSemibold"
+                                FontSize="8"
+                                CharacterSpacing="1"
+                                HeightRequest="22"
+                                Padding="8,0"
+                                CornerRadius="2"
+                                MinimumHeightRequest="0"
+                                MinimumWidthRequest="0"/>
+                    </Border>
+                    <Button Text="✕"
+                            Command="{Binding DismissCompletionCommand}"
+                            Style="{StaticResource VE_BtnIcon}"
+                            TextColor="{StaticResource VE_Text4}"
+                            FontSize="10"
+                            WidthRequest="22"
+                            HeightRequest="22"
+                            MinimumHeightRequest="0"
+                            MinimumWidthRequest="0"/>
+                </HorizontalStackLayout>
+
             </Grid>
         </Border>
 
-        <Grid Grid.Row="4" ColumnDefinitions="*,Auto" Padding="12,0" BackgroundColor="{StaticResource AppAccentDim}">
-            <Label Grid.Column="0" Text="{Binding CursorInfo}" TextColor="#D2D3FF" FontSize="11" VerticalOptions="Center" />
-            <Label Grid.Column="1" Text="Inline completion ready" TextColor="#A2A7E3" FontSize="10" VerticalOptions="Center" />
+        <!-- ══════════════════════════════════════════════════════════════════
+             ROW 3  —  STATUS BAR
+             Layout:  [word count · char count]  ·  [Ln / Col]  ·  [● UNSAVED]
+        ══════════════════════════════════════════════════════════════════ -->
+        <Grid Grid.Row="3"
+              BackgroundColor="{StaticResource VE_BgPanel}"
+              HeightRequest="20">
+
+            <!-- Top border line -->
+            <BoxView VerticalOptions="Start"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource VE_Border2}"/>
+
+            <!-- Content -->
+            <Grid ColumnDefinitions="Auto,*,Auto,16,Auto"
+                  Padding="12,0"
+                  VerticalOptions="Center">
+
+                <!-- Word + char count -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
+                    <Label Text="{Binding WordCount}"
+                           FontFamily="OpenSansRegular"
+                           FontSize="9"
+                           TextColor="{StaticResource VE_Text4}"
+                           VerticalOptions="Center"/>
+                    <BoxView WidthRequest="1"
+                             HeightRequest="8"
+                             BackgroundColor="{StaticResource VE_Border2}"
+                             VerticalOptions="Center"/>
+                    <Label Text="{Binding CharCount}"
+                           FontFamily="OpenSansRegular"
+                           FontSize="9"
+                           TextColor="{StaticResource VE_Text4}"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Cursor position -->
+                <Label Grid.Column="2"
+                       Text="{Binding CursorInfo}"
+                       FontFamily="OpenSansRegular"
+                       FontSize="9"
+                       TextColor="{StaticResource VE_Text4}"
+                       VerticalOptions="Center"/>
+
+                <!-- Unsaved indicator -->
+                <HorizontalStackLayout Grid.Column="4"
+                                       IsVisible="{Binding HasUnsavedChanges}"
+                                       Spacing="4"
+                                       VerticalOptions="Center">
+                    <Border WidthRequest="5"
+                            HeightRequest="5"
+                            BackgroundColor="{StaticResource VE_GoldDim}"
+                            VerticalOptions="Center">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="5"/></Border.StrokeShape>
+                    </Border>
+                    <Label Text="UNSAVED"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="7"
+                           CharacterSpacing="2"
+                           TextColor="{StaticResource VE_GoldDim}"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+            </Grid>
         </Grid>
 
     </Grid>

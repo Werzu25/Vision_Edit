@@ -3,126 +3,236 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:Vision_Edit.ViewModels"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:global="clr-namespace:"
              x:DataType="viewmodels:ChatViewModel"
              x:Class="Vision_Edit.Views.ChatView">
 
-    <Grid RowDefinitions="54,*,Auto,26" RowSpacing="0" BackgroundColor="Transparent">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <global:IsNullOrEmptyConverter    x:Key="IsNullOrEmpty" />
+            <global:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmpty" />
+            <toolkit:InvertedBoolConverter     x:Key="InvertBool" />
+        </ResourceDictionary>
+    </ContentView.Resources>
 
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" Padding="12,8" BackgroundColor="{StaticResource AppPanel}">
-            <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                <Label Text="Vision AI" TextColor="{StaticResource AppText1}" FontAttributes="Bold" FontSize="13" />
-                <Border Padding="6,2" Stroke="{StaticResource AppBorderStrong}" StrokeShape="RoundRectangle 5" BackgroundColor="{StaticResource AppSurface}">
-                    <Label Text="gpt-4o" FontSize="10" TextColor="{StaticResource AppText3}" />
+    <!--
+        Two rows: * (scroll area) / fixed 44 px (input bar).
+        ScrollView instead of CollectionView avoids the unbounded-measure
+        problem that pushed the input bar off screen.
+    -->
+    <Grid RowDefinitions="*,44" RowSpacing="0" BackgroundColor="Transparent">
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             ROW 0 — message scroll area
+        ═══════════════════════════════════════════════════════════════ -->
+        <ScrollView x:Name="Scroll"
+                    Grid.Row="0"
+                    VerticalOptions="Fill"
+                    BackgroundColor="Transparent">
+
+            <VerticalStackLayout Spacing="2" Padding="12,14,12,6">
+
+                <!-- ── Empty state ─────────────────────────────────────── -->
+                <VerticalStackLayout IsVisible="{Binding Messages, Converter={StaticResource IsNullOrEmpty}}"
+                                     HorizontalOptions="Center"
+                                     Spacing="6"
+                                     Padding="0,40,0,0">
+                    <BoxView WidthRequest="20"
+                             HeightRequest="1"
+                             BackgroundColor="{StaticResource VE_GoldDim}"
+                             HorizontalOptions="Center"/>
+                    <Label Text="VISION EDIT AI"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="8"
+                           CharacterSpacing="4"
+                           TextColor="{StaticResource VE_Text4}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Start a conversation"
+                           FontFamily="OpenSansRegular"
+                           FontSize="12"
+                           TextColor="{StaticResource VE_Text3}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- ── Message list (BindableLayout on VerticalStackLayout) ── -->
+                <VerticalStackLayout x:Name="MessageList" Spacing="6">
+                    <BindableLayout.ItemsSource>
+                        <Binding Path="Messages"/>
+                    </BindableLayout.ItemsSource>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="viewmodels:ChatMessage">
+
+                            <!-- Wrapper lets each message sit in a full-width row
+                                 while bubbles align left or right individually. -->
+                            <VerticalStackLayout Padding="0,3,0,0">
+
+                                <!-- ── AI message ───────────────────────── -->
+                                <Border IsVisible="{Binding IsUser, Converter={StaticResource InvertBool}}"
+                                        BackgroundColor="{StaticResource VE_BgCard}"
+                                        Stroke="{StaticResource VE_Border2}"
+                                        StrokeThickness="1"
+                                        Padding="12,8"
+                                        HorizontalOptions="Fill">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="2,8,8,8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="{Binding Content}"
+                                           FontFamily="OpenSansRegular"
+                                           FontSize="12"
+                                           TextColor="{StaticResource VE_Text2}"
+                                           LineBreakMode="WordWrap"
+                                           LineHeight="1.45"/>
+                                </Border>
+
+                                <!-- ── User message ─────────────────────── -->
+                                <Border IsVisible="{Binding IsUser}"
+                                        BackgroundColor="{StaticResource VE_GoldFaint}"
+                                        Stroke="{StaticResource VE_GoldDim}"
+                                        StrokeThickness="1"
+                                        Padding="12,8"
+                                        HorizontalOptions="End"
+                                        MaximumWidthRequest="300">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8,2,8,8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="{Binding Content}"
+                                           FontFamily="OpenSansRegular"
+                                           FontSize="12"
+                                           TextColor="{StaticResource VE_Text1}"
+                                           LineBreakMode="WordWrap"
+                                           LineHeight="1.45"/>
+                                </Border>
+
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- ── Streaming bubble ─────────────────────────────────── -->
+                <Border IsVisible="{Binding IsStreaming}"
+                        BackgroundColor="{StaticResource VE_BgCard}"
+                        Stroke="{StaticResource VE_GoldFaint}"
+                        StrokeThickness="1"
+                        Padding="12,8"
+                        Margin="0,3,0,0"
+                        HorizontalOptions="Fill">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="2,8,8,8"/>
+                    </Border.StrokeShape>
+                    <Grid ColumnDefinitions="14,8,*" VerticalOptions="Center">
+                        <ActivityIndicator Grid.Column="0"
+                                           IsRunning="{Binding IsStreaming}"
+                                           Color="{StaticResource VE_GoldDim}"
+                                           WidthRequest="14"
+                                           HeightRequest="14"
+                                           VerticalOptions="Center"/>
+                        <!-- Empty-state dots before first token -->
+                        <Label Grid.Column="2"
+                               IsVisible="{Binding StreamingContent, Converter={StaticResource IsNullOrEmpty}}"
+                               Text="···"
+                               FontFamily="OpenSansRegular"
+                               FontSize="14"
+                               TextColor="{StaticResource VE_Text4}"
+                               VerticalOptions="Center"/>
+                        <!-- Live token stream -->
+                        <Label Grid.Column="2"
+                               IsVisible="{Binding StreamingContent, Converter={StaticResource IsNotNullOrEmpty}}"
+                               Text="{Binding StreamingContent}"
+                               FontFamily="OpenSansRegular"
+                               FontSize="12"
+                               TextColor="{StaticResource VE_Text3}"
+                               LineBreakMode="WordWrap"
+                               LineHeight="1.45"/>
+                    </Grid>
                 </Border>
-            </HorizontalStackLayout>
 
-            <ActivityIndicator Grid.Column="1"
-                               IsRunning="{Binding IsLoading}"
-                               IsVisible="{Binding IsLoading}"
-                               Color="{StaticResource AppAccent}"
-                               HeightRequest="16"
-                               WidthRequest="16"
-                               VerticalOptions="Center"
-                               Margin="0,0,8,0" />
+                <!-- ── Error banner ─────────────────────────────────────── -->
+                <Border IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullOrEmpty}}"
+                        BackgroundColor="{StaticResource VE_ErrorDim}"
+                        Stroke="{StaticResource VE_Error}"
+                        StrokeThickness="1"
+                        Padding="10,7"
+                        Margin="0,4,0,0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="3"/>
+                    </Border.StrokeShape>
+                    <Label Text="{Binding ErrorMessage}"
+                           FontFamily="OpenSansRegular"
+                           FontSize="11"
+                           TextColor="{StaticResource VE_Error}"
+                           LineBreakMode="WordWrap"/>
+                </Border>
 
-            <Button Grid.Column="2"
-                    Text="Clear"
-                    Command="{Binding ClearChatCommand}"
-                    HeightRequest="28"
-                    Padding="10,0"
-                    BackgroundColor="Transparent"
-                    TextColor="{StaticResource AppText3}" />
-        </Grid>
+                <!-- Bottom breathing room -->
+                <BoxView HeightRequest="6" Color="Transparent"/>
 
-        <Border Grid.Row="1"
-                Margin="10,8,10,8"
-                Stroke="{StaticResource AppBorder}"
-                StrokeThickness="1"
-                StrokeShape="RoundRectangle 10"
-                BackgroundColor="{StaticResource EditorBg}">
-            <CollectionView x:Name="MessagesView"
-                            ItemsSource="{Binding Messages}"
-                            VerticalOptions="Fill"
-                            BackgroundColor="Transparent">
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="8" />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="viewmodels:ChatMessage">
-                        <Grid ColumnDefinitions="*,*" Padding="10,2">
-                            <Border Grid.Column="0"
-                                    IsVisible="{Binding IsUser, Converter={toolkit:InvertedBoolConverter}}"
-                                    Padding="12,10"
-                                    StrokeShape="RoundRectangle 12,12,12,5"
-                                    StrokeThickness="1"
-                                    Stroke="{StaticResource AppBorder}"
-                                    BackgroundColor="{StaticResource AppSurface}"
-                                    Margin="0,0,8,0">
-                                <Label Text="{Binding Content}" TextColor="{StaticResource AppText1}" FontSize="13" LineBreakMode="WordWrap" />
-                            </Border>
+            </VerticalStackLayout>
+        </ScrollView>
 
-                            <Border Grid.Column="1"
-                                    IsVisible="{Binding IsUser}"
-                                    Padding="12,10"
-                                    StrokeShape="RoundRectangle 12,12,5,12"
-                                    StrokeThickness="0"
-                                    BackgroundColor="{StaticResource AppAccentDim}"
-                                    Margin="8,0,0,0">
-                                <Label Text="{Binding Content}" TextColor="#E5E6FF" FontSize="13" LineBreakMode="WordWrap" />
-                            </Border>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-                <CollectionView.Footer>
-                    <BoxView HeightRequest="8" Color="Transparent" />
-                </CollectionView.Footer>
-            </CollectionView>
-        </Border>
+        <!-- ═══════════════════════════════════════════════════════════════
+             ROW 1 — input bar, exactly 44 px
+        ═══════════════════════════════════════════════════════════════ -->
+        <Grid Grid.Row="1" BackgroundColor="{StaticResource VE_BgPanel}">
 
-        <Border Grid.Row="2"
-                Margin="10,0,10,8"
-                Padding="6"
-                Stroke="{StaticResource AppBorderStrong}"
-                StrokeThickness="1"
-                StrokeShape="RoundRectangle 10"
-                BackgroundColor="{StaticResource AppSurface}">
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
-                <Editor x:Name="InputEditor"
-                        Grid.Column="0"
-                        Text="{Binding UserInput, Mode=TwoWay}"
-                        Placeholder="Ask anything..."
-                        PlaceholderColor="{StaticResource AppText3}"
-                        TextColor="{StaticResource AppText1}"
-                        BackgroundColor="Transparent"
-                        FontSize="13"
-                        MinimumHeightRequest="44"
-                        MaximumHeightRequest="130"
-                        AutoSize="TextChanges"
-                        Margin="8,2,2,2" />
+            <!-- Top divider -->
+            <BoxView VerticalOptions="Start"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource VE_Border2}"/>
 
-                <Button Grid.Column="1"
-                        Text="➤"
-                        Command="{Binding GetApiContentCommand}"
-                        BackgroundColor="{StaticResource AppAccent}"
-                        TextColor="White"
-                        FontSize="16"
-                        FontAttributes="Bold"
-                        CornerRadius="9"
-                        HeightRequest="38"
-                        WidthRequest="38"
-                        Padding="0"
-                        VerticalOptions="End"
-                        Margin="0,0,2,2" />
+            <!-- Controls -->
+            <Grid ColumnDefinitions="*,4,Auto,4,Auto"
+                  Padding="10,0"
+                  VerticalOptions="Center">
+
+                <!-- Text input -->
+                <Border Grid.Column="0"
+                        BackgroundColor="{StaticResource VE_BgInput}"
+                        Stroke="{StaticResource VE_Border2}"
+                        StrokeThickness="1"
+                        Padding="10,0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="3"/>
+                    </Border.StrokeShape>
+                    <Entry x:Name="InputEntry"
+                           Text="{Binding UserInput, Mode=TwoWay}"
+                           Placeholder="Message the AI…"
+                           PlaceholderColor="{StaticResource VE_Text4}"
+                           TextColor="{StaticResource VE_Text1}"
+                           BackgroundColor="Transparent"
+                           FontFamily="OpenSansRegular"
+                           FontSize="12"
+                           HeightRequest="28"
+                           MinimumHeightRequest="0"
+                           MinimumWidthRequest="0"
+                           ReturnCommand="{Binding SendMessageCommand}"
+                           VerticalOptions="Center"/>
+                </Border>
+
+                <!-- Clear button -->
+                <Button Grid.Column="2"
+                        Text="CLR"
+                        Command="{Binding ClearChatCommand}"
+                        Style="{StaticResource VE_BtnIcon}"
+                        IsVisible="{Binding Messages, Converter={StaticResource IsNotNullOrEmpty}}"
+                        WidthRequest="28"
+                        HeightRequest="28"
+                        FontSize="7"
+                        CharacterSpacing="1"/>
+
+                <!-- Send button -->
+                <Button Grid.Column="4"
+                        Text="SEND"
+                        Command="{Binding SendMessageCommand}"
+                        IsEnabled="{Binding IsStreaming, Converter={StaticResource InvertBool}}"
+                        Style="{StaticResource VE_BtnPrimary}"
+                        WidthRequest="50"
+                        HeightRequest="28"
+                        FontSize="8"
+                        CharacterSpacing="2"
+                        Padding="0"/>
+
             </Grid>
-        </Border>
-
-        <Label Grid.Row="3"
-               Text="Tip: highlight text in editor and then send your prompt"
-               TextColor="{StaticResource AppText3}"
-               FontSize="10"
-               HorizontalTextAlignment="Center"
-               VerticalTextAlignment="Center"
-               BackgroundColor="{StaticResource AppPanel}" />
+        </Grid>
 
     </Grid>
 </ContentView>

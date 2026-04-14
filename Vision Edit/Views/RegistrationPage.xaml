@@ -1,119 +1,238 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:Vision_Edit.ViewModels"
              x:Class="Vision_Edit.Views.RegistrationPage"
              x:DataType="viewmodels:RegistrationViewModel"
-             Title="Register"
-             BackgroundColor="{StaticResource AppBg}">
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="#0A0A0A">
 
-    <ContentPage.Background>
-        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#0A0B15" Offset="0.0" />
-            <GradientStop Color="#09090E" Offset="0.6" />
-            <GradientStop Color="#12132A" Offset="1.0" />
-        </LinearGradientBrush>
-    </ContentPage.Background>
+    <Grid RowDefinitions="*, Auto">
 
-    <ScrollView>
-        <Grid Padding="24,36">
-            <Border Stroke="{StaticResource AppBorderStrong}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 16"
-                    BackgroundColor="{StaticResource AppPanel}"
-                    Padding="22"
-                    MaximumWidthRequest="500"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center">
+        <!-- Top accent line -->
+        <BoxView Grid.RowSpan="2"
+                 HeightRequest="1"
+                 BackgroundColor="{StaticResource VE_Gold}"
+                 VerticalOptions="Start"
+                 Opacity="0.5"/>
 
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="Create account"
-                           FontSize="30"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource AppText1}" />
+        <ScrollView Grid.Row="0" VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Padding="36,60,36,0" Spacing="0">
 
-                    <Label Text="Register to sync and save your documents."
-                           TextColor="{StaticResource AppText2}"
-                           FontSize="13" />
-
-                    <BoxView HeightRequest="1" Color="{StaticResource AppBorder}" Margin="0,4,0,6" />
-
-                    <Label Text="Username" FontAttributes="Bold" FontSize="12" TextColor="{StaticResource AppText2}" />
-                    <Border Stroke="{StaticResource AppBorder}" StrokeShape="RoundRectangle 10" BackgroundColor="{StaticResource AppSurface}" Padding="12,6">
-                        <Entry Placeholder="Username"
-                               Text="{Binding Username}"
-                               TextColor="{StaticResource AppText1}"
-                               PlaceholderColor="{StaticResource AppText3}"
-                               ClearButtonVisibility="WhileEditing"
-                               ReturnType="Next" />
-                    </Border>
-
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                        <VerticalStackLayout Grid.Column="0" Spacing="6">
-                            <Label Text="First name" FontAttributes="Bold" FontSize="12" TextColor="{StaticResource AppText2}" />
-                            <Border Stroke="{StaticResource AppBorder}" StrokeShape="RoundRectangle 10" BackgroundColor="{StaticResource AppSurface}" Padding="12,6">
-                                <Entry Placeholder="First name"
-                                       Text="{Binding FirstName}"
-                                       TextColor="{StaticResource AppText1}"
-                                       PlaceholderColor="{StaticResource AppText3}"
-                                       ClearButtonVisibility="WhileEditing"
-                                       ReturnType="Next" />
-                            </Border>
-                        </VerticalStackLayout>
-
-                        <VerticalStackLayout Grid.Column="1" Spacing="6">
-                            <Label Text="Last name" FontAttributes="Bold" FontSize="12" TextColor="{StaticResource AppText2}" />
-                            <Border Stroke="{StaticResource AppBorder}" StrokeShape="RoundRectangle 10" BackgroundColor="{StaticResource AppSurface}" Padding="12,6">
-                                <Entry Placeholder="Last name"
-                                       Text="{Binding LastName}"
-                                       TextColor="{StaticResource AppText1}"
-                                       PlaceholderColor="{StaticResource AppText3}"
-                                       ClearButtonVisibility="WhileEditing"
-                                       ReturnType="Next" />
-                            </Border>
-                        </VerticalStackLayout>
+                <!-- ── WORDMARK ── -->
+                <Grid RowDefinitions="Auto,Auto,Auto" Margin="0,0,0,44">
+                    <Grid Grid.Row="0"
+                          ColumnDefinitions="16,*,16"
+                          HeightRequest="16"
+                          Margin="0,0,0,10">
+                        <BoxView Grid.Column="0" HeightRequest="1" WidthRequest="16"
+                                 BackgroundColor="{StaticResource VE_GoldDim}"
+                                 HorizontalOptions="Start" VerticalOptions="Center"/>
+                        <BoxView Grid.Column="2" HeightRequest="1" WidthRequest="16"
+                                 BackgroundColor="{StaticResource VE_GoldDim}"
+                                 HorizontalOptions="End" VerticalOptions="Center"/>
                     </Grid>
+                    <Label Grid.Row="1"
+                           Text="VISION"
+                           FontFamily="DisplayFont"
+                           FontSize="48"
+                           CharacterSpacing="14"
+                           TextColor="{StaticResource VE_Text1}"
+                           HorizontalOptions="Center"/>
+                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto,*" Margin="0,4,0,0">
+                        <BoxView Grid.Column="0" HeightRequest="1"
+                                 BackgroundColor="{StaticResource VE_Divider}"
+                                 VerticalOptions="Center" Margin="0,0,12,0"/>
+                        <Label Grid.Column="1"
+                               Text="EDIT"
+                               FontFamily="SpaceMono"
+                               FontSize="10"
+                               CharacterSpacing="8"
+                               TextColor="{StaticResource VE_Gold}"
+                               VerticalOptions="Center"/>
+                        <BoxView Grid.Column="2" HeightRequest="1"
+                                 BackgroundColor="{StaticResource VE_Divider}"
+                                 VerticalOptions="Center" Margin="12,0,0,0"/>
+                    </Grid>
+                </Grid>
 
-                    <Label Text="Email" FontAttributes="Bold" FontSize="12" TextColor="{StaticResource AppText2}" />
-                    <Border Stroke="{StaticResource AppBorder}" StrokeShape="RoundRectangle 10" BackgroundColor="{StaticResource AppSurface}" Padding="12,6">
-                        <Entry Placeholder="name@example.com"
-                               Text="{Binding Email}"
-                               Keyboard="Email"
-                               TextColor="{StaticResource AppText1}"
-                               PlaceholderColor="{StaticResource AppText3}"
-                               ClearButtonVisibility="WhileEditing"
-                               ReturnType="Next" />
-                    </Border>
-
-                    <Label Text="Password" FontAttributes="Bold" FontSize="12" TextColor="{StaticResource AppText2}" />
-                    <Border Stroke="{StaticResource AppBorder}" StrokeShape="RoundRectangle 10" BackgroundColor="{StaticResource AppSurface}" Padding="12,6">
-                        <Entry Placeholder="••••••••"
-                               Text="{Binding Password}"
-                               IsPassword="True"
-                               TextColor="{StaticResource AppText1}"
-                               PlaceholderColor="{StaticResource AppText3}"
-                               ClearButtonVisibility="WhileEditing"
-                               ReturnType="Done" />
-                    </Border>
-
-                    <Button Text="Register"
-                            x:Name="RegisterButton"
-                            HeightRequest="44"
-                            FontAttributes="Bold"
-                            Margin="0,8,0,0"
-                            BackgroundColor="{StaticResource AppAccent}"
-                            Command="{Binding RegisterCommand}" />
-
-                    <Button Text="Back"
-                            x:Name="SwitchToMainPageButton"
-                            HeightRequest="42"
-                            BackgroundColor="Transparent"
-                            BorderColor="{StaticResource AppBorderStrong}"
-                            BorderWidth="1"
-                            TextColor="{StaticResource AppText2}"
-                            Command="{Binding RedirectToMainPageCommand}" />
+                <!-- ── PAGE HEADING ── -->
+                <VerticalStackLayout Spacing="6" Margin="0,0,0,36">
+                    <Label Text="CREATE ACCOUNT"
+                           FontFamily="SpaceMono"
+                           FontSize="10"
+                           CharacterSpacing="5"
+                           TextColor="{StaticResource VE_Text3}"/>
+                    <Label Text="Join the studio."
+                           FontFamily="SerifFont"
+                           FontSize="22"
+                           FontAttributes="Italic"
+                           TextColor="{StaticResource VE_Text1}"/>
                 </VerticalStackLayout>
-            </Border>
-        </Grid>
-    </ScrollView>
+
+                <!-- ── FORM CARD ── -->
+                <Border BackgroundColor="{StaticResource VE_BgCard}"
+                        Stroke="{StaticResource VE_Border2}"
+                        StrokeThickness="1"
+                        Margin="0,0,0,28">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="3"/>
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Padding="28,30,28,30" Spacing="0">
+
+                        <!-- USERNAME -->
+                        <Label Text="USERNAME"
+                               Style="{StaticResource VE_CapsLabel}"
+                               Margin="0,0,0,8"/>
+                        <Border BackgroundColor="{StaticResource VE_BgInput}"
+                                Stroke="{StaticResource VE_Border2}"
+                                StrokeThickness="1"
+                                Padding="16,0"
+                                Margin="0,0,0,20">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="2"/></Border.StrokeShape>
+                            <Entry Style="{StaticResource VE_Entry}"
+                                   Placeholder="your_handle"
+                                   Text="{Binding Username}"
+                                   ReturnType="Next"
+                                   HeightRequest="46"/>
+                        </Border>
+
+                        <!-- FIRST / LAST NAME -->
+                        <Grid ColumnDefinitions="*,12,*" Margin="0,0,0,20">
+                            <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                <Label Text="FIRST NAME" Style="{StaticResource VE_CapsLabel}"/>
+                                <Border BackgroundColor="{StaticResource VE_BgInput}"
+                                        Stroke="{StaticResource VE_Border2}"
+                                        StrokeThickness="1"
+                                        Padding="12,0">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="2"/></Border.StrokeShape>
+                                    <Entry Style="{StaticResource VE_Entry}"
+                                           Placeholder="First"
+                                           Text="{Binding FirstName}"
+                                           ReturnType="Next"
+                                           HeightRequest="46"/>
+                                </Border>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" Spacing="8">
+                                <Label Text="LAST NAME" Style="{StaticResource VE_CapsLabel}"/>
+                                <Border BackgroundColor="{StaticResource VE_BgInput}"
+                                        Stroke="{StaticResource VE_Border2}"
+                                        StrokeThickness="1"
+                                        Padding="12,0">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="2"/></Border.StrokeShape>
+                                    <Entry Style="{StaticResource VE_Entry}"
+                                           Placeholder="Last"
+                                           Text="{Binding LastName}"
+                                           ReturnType="Next"
+                                           HeightRequest="46"/>
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- EMAIL -->
+                        <Label Text="EMAIL" Style="{StaticResource VE_CapsLabel}" Margin="0,0,0,8"/>
+                        <Border BackgroundColor="{StaticResource VE_BgInput}"
+                                Stroke="{StaticResource VE_Border2}"
+                                StrokeThickness="1"
+                                Padding="16,0"
+                                Margin="0,0,0,20">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="2"/></Border.StrokeShape>
+                            <Entry Style="{StaticResource VE_Entry}"
+                                   Placeholder="you@studio.com"
+                                   Text="{Binding Email}"
+                                   Keyboard="Email"
+                                   ReturnType="Next"
+                                   HeightRequest="46"/>
+                        </Border>
+
+                        <!-- PASSWORD -->
+                        <Label Text="PASSWORD" Style="{StaticResource VE_CapsLabel}" Margin="0,0,0,8"/>
+                        <Border BackgroundColor="{StaticResource VE_BgInput}"
+                                Stroke="{StaticResource VE_Border2}"
+                                StrokeThickness="1"
+                                Padding="16,0"
+                                Margin="0,0,0,8">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="2"/></Border.StrokeShape>
+                            <Entry Style="{StaticResource VE_Entry}"
+                                   Placeholder="••••••••••"
+                                   Text="{Binding Password}"
+                                   IsPassword="True"
+                                   ReturnType="Done"
+                                   HeightRequest="46"/>
+                        </Border>
+
+                        <!-- Password hint -->
+                        <Label Text="Min. 8 characters — use something you won't forget."
+                               FontFamily="SpaceMono"
+                               FontSize="10"
+                               TextColor="{StaticResource VE_Text4}"
+                               Margin="0,0,0,28"/>
+
+                        <!-- ERROR -->
+                        <Label Text="{Binding ErrorMessage}"
+                               FontFamily="SpaceMono"
+                               FontSize="11"
+                               TextColor="{StaticResource VE_Error}"
+                               HorizontalOptions="Center"
+                               IsVisible="{Binding HasError}"
+                               Margin="0,0,0,14"/>
+
+                        <!-- REGISTER BUTTON -->
+                        <Button Text="CREATE ACCOUNT"
+                                Style="{StaticResource VE_BtnPrimary}"
+                                Command="{Binding RegisterCommand}"
+                                IsEnabled="{Binding IsNotLoading}"
+                                Margin="0,0,0,0"/>
+
+                        <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                           IsVisible="{Binding IsLoading}"
+                                           Color="{StaticResource VE_Gold}"
+                                           HorizontalOptions="Center"
+                                           HeightRequest="22"
+                                           WidthRequest="22"
+                                           Margin="0,14,0,0"/>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- BACK TO SIGN IN -->
+                <HorizontalStackLayout HorizontalOptions="Center"
+                                       Margin="0,4,0,40"
+                                       Spacing="4">
+                    <Label Text="Already have an account?"
+                           FontFamily="SpaceMono"
+                           FontSize="12"
+                           TextColor="{StaticResource VE_Text3}"/>
+                    <Label Text="Sign in →"
+                           FontFamily="SpaceMono"
+                           FontSize="12"
+                           TextColor="{StaticResource VE_Gold}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding RedirectToMainPageCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- BOTTOM LEGAL BAR -->
+        <VerticalStackLayout Grid.Row="1"
+                             BackgroundColor="#0A0A0A"
+                             Padding="36,14,36,28"
+                             Spacing="4">
+            <BoxView HeightRequest="1"
+                     BackgroundColor="{StaticResource VE_Divider}"
+                     Margin="0,0,0,10"/>
+            <Label Text="By creating an account you accept our Terms of Use and Privacy Policy."
+                   FontFamily="SpaceMono"
+                   FontSize="9"
+                   CharacterSpacing="1"
+                   TextColor="{StaticResource VE_Text4}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"/>
+        </VerticalStackLayout>
+
+    </Grid>
 </ContentPage>

@@ -20,37 +20,55 @@ public partial class EditorViewModel : ObservableObject
     private const int CompletionDebounceMs = 500;
     private const int MinCompletionContextLength = 8;
 
-    // ── Document ──────────────────────────────────────────────────────────
-    [ObservableProperty] private string _documentTitle = "Untitled";
-    [ObservableProperty] private string _currentFilePath = string.Empty;
-    [ObservableProperty] private bool   _hasUnsavedChanges;
-
-    // ── Editor state ──────────────────────────────────────────────────────
+    // ── Document ───────────────────────────────────────────────────────────
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(CursorInfo))]
-    private int _cursorPosition;
+    private string documentTitle = "Untitled";
 
     [ObservableProperty]
+    private string currentFilePath = string.Empty;
+
+    [ObservableProperty]
+    private bool hasUnsavedChanges;
+
+    // ── Editor state ───────────────────────────────────────────────────────
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CursorInfo))]
-    private int _selectionLength;
+    private int cursorPosition;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CursorInfo))]
-    private string _text = string.Empty;
+    private int selectionLength;
 
-    [ObservableProperty] private string _selectedText = string.Empty;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CursorInfo))]
+    [NotifyPropertyChangedFor(nameof(WordCount))]
+    [NotifyPropertyChangedFor(nameof(CharCount))]
+    private string text = string.Empty;
 
-    // ── Formatting ────────────────────────────────────────────────────────
-    [ObservableProperty] private double _fontSize  = 14;
-    [ObservableProperty] private Color  _fontColor = Colors.White;
+    [ObservableProperty]
+    private string selectedText = string.Empty;
 
-    // ── Completion ────────────────────────────────────────────────────────
-    [ObservableProperty] private bool   _isCompletionEnabled = true;
-    [ObservableProperty] private bool   _isCompletionVisible;
-    [ObservableProperty] private bool   _isLoadingCompletion;
-    [ObservableProperty] private string _completionSuggestion = string.Empty;
+    // ── Formatting ─────────────────────────────────────────────────────────
+    [ObservableProperty]
+    private double fontSize = 14;
 
-    // ── Cursor display ────────────────────────────────────────────────────
+    [ObservableProperty]
+    private Color fontColor = Colors.White;
+
+    // ── Completion ─────────────────────────────────────────────────────────
+    [ObservableProperty]
+    private bool isCompletionEnabled = true;
+
+    [ObservableProperty]
+    private bool isCompletionVisible;
+
+    [ObservableProperty]
+    private bool isLoadingCompletion;
+
+    [ObservableProperty]
+    private string completionSuggestion = string.Empty;
+
+    // ── Computed status bar values ─────────────────────────────────────────
     public string CursorInfo
     {
         get
@@ -65,11 +83,23 @@ public partial class EditorViewModel : ObservableObject
         }
     }
 
+    public string WordCount
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(Text)) return "0 words";
+            int n = Text.Split([' ', '\n', '\r', '\t'], StringSplitOptions.RemoveEmptyEntries).Length;
+            return $"{n} {(n == 1 ? "word" : "words")}";
+        }
+    }
+
+    public string CharCount => $"{Text?.Length ?? 0} chars";
+
     public EditorViewModel(ApiHandler apiHandler, IHttpClientFactory httpClientFactory, UserManager userManager)
     {
-        _apiHandler = apiHandler;
-        _httpClient = httpClientFactory.CreateClient("Base");
-        _userManager = userManager;
+        _apiHandler   = apiHandler;
+        _httpClient   = httpClientFactory.CreateClient("Base");
+        _userManager  = userManager;
     }
 
     // ── Selection tracking ─────────────────────────────────────────────────
@@ -78,12 +108,8 @@ public partial class EditorViewModel : ObservableObject
     partial void OnCursorPositionChanged(int value)
     {
         SetSelectedText();
-
         if (IsCompletionVisible && !_isApplyingCompletion)
             DismissCompletion();
-
-        if (IsCompletionEnabled && !_suppressUnsaved)
-            QueueInlineCompletion();
     }
 
     partial void OnTextChanged(string value)
@@ -116,24 +142,22 @@ public partial class EditorViewModel : ObservableObject
     public void SetSelectedText() => SelectedText = GetSelectedText();
 
     // ── Font controls ──────────────────────────────────────────────────────
-    [RelayCommand] public void IncreaseFontSize() { if (FontSize < 32) FontSize++; }
-    [RelayCommand] public void DecreaseFontSize() { if (FontSize > 8)  FontSize--; }
-    [RelayCommand] public void SetFontColor(string hex) => FontColor = Color.FromArgb(hex);
+    [RelayCommand]
+    public void IncreaseFontSize() { if (FontSize < 32) FontSize++; }
+
+    [RelayCommand]
+    public void DecreaseFontSize() { if (FontSize > 8) FontSize--; }
+
+    [RelayCommand]
+    public void SetFontColor(string hex) => FontColor = Color.FromArgb(hex);
 
     // ── Completion toggle ──────────────────────────────────────────────────
     [RelayCommand]
     public void ToggleCompletion()
     {
         IsCompletionEnabled = !IsCompletionEnabled;
-        if (!IsCompletionEnabled)
-        {
-            CancelPendingCompletion();
-            DismissCompletion();
-        }
-        else
-        {
-            QueueInlineCompletion();
-        }
+        if (!IsCompletionEnabled) { CancelPendingCompletion(); DismissCompletion(); }
+        else QueueInlineCompletion();
     }
 
     [RelayCommand]
@@ -148,48 +172,39 @@ public partial class EditorViewModel : ObservableObject
         if (!IsCompletionEnabled || string.IsNullOrWhiteSpace(Text)) return;
 
         string currentText = Text ?? string.Empty;
-        int pos = Math.Clamp(CursorPosition, 0, currentText.Length);
-        string context = currentText[..pos];
+        int pos    = Math.Clamp(CursorPosition, 0, currentText.Length);
+        string ctx = currentText[..pos];
 
-        if (!force && (pos < MinCompletionContextLength || string.IsNullOrWhiteSpace(context)))
+        if (!force && (pos < MinCompletionContextLength || string.IsNullOrWhiteSpace(ctx)))
         {
             DismissCompletion();
             return;
         }
 
-        IsLoadingCompletion = true;
-        IsCompletionVisible = false;
+        IsLoadingCompletion  = true;
+        IsCompletionVisible  = false;
         CompletionSuggestion = string.Empty;
 
         try
         {
-            string result = await _apiHandler.GetCompletionResponse(context);
+            string result = await _apiHandler.GetCompletionResponse(ctx);
             cancellationToken.ThrowIfCancellationRequested();
 
             string latestText = Text ?? string.Empty;
-            int latestPos = Math.Clamp(CursorPosition, 0, latestText.Length);
-            string latestContext = latestText[..latestPos];
+            int latestPos     = Math.Clamp(CursorPosition, 0, latestText.Length);
+            string latestCtx  = latestText[..latestPos];
 
-            if (!string.Equals(context, latestContext, StringComparison.Ordinal))
-                return;
+            if (!string.Equals(ctx, latestCtx, StringComparison.Ordinal)) return;
 
             if (!string.IsNullOrWhiteSpace(result))
             {
                 CompletionSuggestion = result;
-                IsCompletionVisible = true;
+                IsCompletionVisible  = true;
             }
-            else
-            {
-                DismissCompletion();
-            }
+            else DismissCompletion();
         }
-        catch (OperationCanceledException)
-        {
-        }
-        finally
-        {
-            IsLoadingCompletion = false;
-        }
+        catch (OperationCanceledException) { }
+        finally { IsLoadingCompletion = false; }
     }
 
     private void QueueInlineCompletion()
@@ -199,28 +214,26 @@ public partial class EditorViewModel : ObservableObject
         _ = QueueInlineCompletionAsync(_completionCts.Token, _completionCts);
     }
 
-    private async Task QueueInlineCompletionAsync(CancellationToken cancellationToken, CancellationTokenSource owner)
+    private async Task QueueInlineCompletionAsync(CancellationToken ct, CancellationTokenSource owner)
     {
         try
         {
-            await Task.Delay(CompletionDebounceMs, cancellationToken);
-            await RequestCompletionInternal(cancellationToken);
+            await Task.Delay(CompletionDebounceMs, ct);
+            await RequestCompletionInternal(ct);
         }
-        catch (OperationCanceledException)
-        {
-        }
+        catch (OperationCanceledException) { }
         finally
         {
+            if (ReferenceEquals(_completionCts, owner)) _completionCts = null;
             owner.Dispose();
-            if (ReferenceEquals(_completionCts, owner))
-                _completionCts = null;
         }
     }
 
     private void CancelPendingCompletion()
     {
         if (_completionCts is null) return;
-        _completionCts.Cancel();
+        try { _completionCts.Cancel(); }
+        catch (ObjectDisposedException) { }
     }
 
     [RelayCommand]
@@ -232,19 +245,16 @@ public partial class EditorViewModel : ObservableObject
         _isApplyingCompletion = true;
         try
         {
-            Text = (Text ?? string.Empty).Insert(pos, CompletionSuggestion);
+            Text           = (Text ?? string.Empty).Insert(pos, CompletionSuggestion);
             CursorPosition = pos + CompletionSuggestion.Length;
             SelectionLength = 0;
         }
-        finally
-        {
-            _isApplyingCompletion = false;
-        }
+        finally { _isApplyingCompletion = false; }
 
         DismissCompletion();
     }
 
-    // ── Document save / open ───────────────────────────────────────────────
+    // ── Document save ──────────────────────────────────────────────────────
     [RelayCommand]
     public async Task SaveDocument()
     {
@@ -268,20 +278,15 @@ public partial class EditorViewModel : ObservableObject
     {
         try
         {
-            SaveDocumentModel document = new()
+            var result = await _httpClient.PostAsJsonAsync("Document/save", new SaveDocumentModel
             {
-                Name = string.IsNullOrWhiteSpace(DocumentTitle) ? "Untitled" : DocumentTitle.Trim(),
-                Content = Text ?? string.Empty,
+                Name     = string.IsNullOrWhiteSpace(DocumentTitle) ? "Untitled" : DocumentTitle.Trim(),
+                Content  = Text ?? string.Empty,
                 Username = _userManager.Username
-            };
-
-            var result = await _httpClient.PostAsJsonAsync("Document/save", document);
+            });
             return result.IsSuccessStatusCode;
         }
-        catch
-        {
-            return false;
-        }
+        catch { return false; }
     }
 
     [RelayCommand]
@@ -289,10 +294,10 @@ public partial class EditorViewModel : ObservableObject
     {
         try
         {
-            byte[] bytes  = Encoding.UTF8.GetBytes(Text ?? string.Empty);
-            using var ms  = new MemoryStream(bytes);
-            string name   = (DocumentTitle ?? "Untitled").TrimEnd() + ".txt";
-            var result    = await FileSaver.Default.SaveAsync(name, ms, CancellationToken.None);
+            byte[] bytes = Encoding.UTF8.GetBytes(Text ?? string.Empty);
+            using var ms = new MemoryStream(bytes);
+            string name  = (DocumentTitle ?? "Untitled").TrimEnd() + ".txt";
+            var result   = await FileSaver.Default.SaveAsync(name, ms, CancellationToken.None);
             if (result.IsSuccessful)
             {
                 CurrentFilePath   = result.FilePath ?? string.Empty;
@@ -303,8 +308,55 @@ public partial class EditorViewModel : ObservableObject
         catch { /* user cancelled */ }
     }
 
+    // ── Document load ──────────────────────────────────────────────────────
+
+    /// <summary>
+    /// When logged in: show a picker of cloud-saved documents, then load the chosen one.
+    /// When offline: fall back to the local file picker.
+    /// </summary>
     [RelayCommand]
-    public async Task OpenDocument()
+    public async Task LoadDocument()
+    {
+        if (!_userManager.IsLoggedIn)
+        {
+            await OpenLocalFile();
+            return;
+        }
+
+        try
+        {
+            var listResp = await _httpClient.GetAsync($"Document/list/{_userManager.Username}");
+            if (!listResp.IsSuccessStatusCode) { await OpenLocalFile(); return; }
+
+            var docs = await listResp.Content.ReadFromJsonAsync<List<DocumentSummaryModel>>();
+            if (docs is null || docs.Count == 0)
+            {
+                // Nothing saved in cloud yet — fall back to file picker
+                await OpenLocalFile();
+                return;
+            }
+
+            string[] names = [.. docs.Select(d => d.Name)];
+            string? chosen = await Shell.Current.DisplayActionSheetAsync(
+                title: "Open document", cancel: "Cancel", destruction: null, buttons: names);
+
+            if (string.IsNullOrEmpty(chosen) || chosen == "Cancel") return;
+
+            var summary = docs.FirstOrDefault(d => d.Name == chosen);
+            if (summary is null) return;
+
+            var docResp = await _httpClient.GetAsync($"Document/{summary.Id}");
+            if (!docResp.IsSuccessStatusCode) return;
+
+            var doc = await docResp.Content.ReadFromJsonAsync<DocumentModel>();
+            if (doc is null) return;
+
+            LoadIntoEditor(doc.Name, doc.Content);
+        }
+        catch { /* network error, silently ignore */ }
+    }
+
+    private async Task OpenLocalFile()
     {
         try
         {
@@ -313,27 +365,32 @@ public partial class EditorViewModel : ObservableObject
                 PickerTitle = "Open document",
                 FileTypes   = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
                 {
-                    { DevicePlatform.WinUI, new[] { ".txt", ".md", ".cs", ".py", ".js", ".ts", ".json", ".xml", ".html", ".css" } },
-                    { DevicePlatform.macOS, new[] { "txt", "md", "cs", "py", "js" } }
+                    { DevicePlatform.WinUI, [".txt", ".md", ".cs", ".py", ".js", ".ts", ".json", ".xml", ".html", ".css"] },
+                    { DevicePlatform.macOS, ["txt", "md", "cs", "py", "js"] }
                 })
             });
-
             if (pick is null) return;
 
-            CancelPendingCompletion();
-            DismissCompletion();
-            _suppressUnsaved = true;
-            try
-            {
-                Text              = await File.ReadAllTextAsync(pick.FullPath, Encoding.UTF8);
-                DocumentTitle     = Path.GetFileNameWithoutExtension(pick.FileName);
-                CurrentFilePath   = pick.FullPath;
-                HasUnsavedChanges = false;
-                CursorPosition    = 0;
-            }
-            finally { _suppressUnsaved = false; }
+            string content = await File.ReadAllTextAsync(pick.FullPath, Encoding.UTF8);
+            LoadIntoEditor(Path.GetFileNameWithoutExtension(pick.FileName), content, pick.FullPath);
         }
         catch { /* user cancelled */ }
+    }
+
+    private void LoadIntoEditor(string title, string content, string filePath = "")
+    {
+        CancelPendingCompletion();
+        DismissCompletion();
+        _suppressUnsaved = true;
+        try
+        {
+            DocumentTitle     = title;
+            Text              = content;
+            CurrentFilePath   = filePath;
+            HasUnsavedChanges = false;
+            CursorPosition    = 0;
+        }
+        finally { _suppressUnsaved = false; }
     }
 
     [RelayCommand]
@@ -341,13 +398,7 @@ public partial class EditorViewModel : ObservableObject
     {
         CancelPendingCompletion();
         DismissCompletion();
-        _suppressUnsaved  = true;
-        Text              = string.Empty;
-        DocumentTitle     = "Untitled";
-        CurrentFilePath   = string.Empty;
-        HasUnsavedChanges = false;
-        CursorPosition    = 0;
-        _suppressUnsaved  = false;
+        LoadIntoEditor("Untitled", string.Empty);
     }
 
     [RelayCommand]
@@ -356,4 +407,7 @@ public partial class EditorViewModel : ObservableObject
         IsCompletionVisible  = false;
         CompletionSuggestion = string.Empty;
     }
+
+    [RelayCommand]
+    public async Task OpenChat() => await Shell.Current.GoToAsync("//Workspace");
 }

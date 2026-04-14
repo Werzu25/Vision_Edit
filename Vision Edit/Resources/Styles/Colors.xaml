@@ -3,60 +3,107 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- ── App dark theme tokens ── -->
-    <Color x:Key="AppBg">#09090E</Color>
-    <Color x:Key="AppSurface">#111218</Color>
-    <Color x:Key="AppSurface2">#17192380</Color>
-    <Color x:Key="AppPanel">#13141C</Color>
-    <Color x:Key="AppBorder">#20223A</Color>
-    <Color x:Key="AppBorderStrong">#32355C</Color>
-    <Color x:Key="AppSep">#13141F</Color>
+    <!-- Material Design 3 Dark Theme Tokens -->
+    <!-- Primary: Indigo Blue -->
+    <Color x:Key="Primary">#6366F1</Color>
+    <Color x:Key="OnPrimary">#FFFFFF</Color>
+    <Color x:Key="PrimaryContainer">#4F46E5</Color>
+    <Color x:Key="OnPrimaryContainer">#F0F4FF</Color>
 
-    <Color x:Key="AppAccent">#7B6EFF</Color>
-    <Color x:Key="AppAccentDim">#4A40CC</Color>
-    <Color x:Key="AppAccentSoft">#2A2570</Color>
-    <Color x:Key="AppAccentGlow">#7B6EFF40</Color>
-    <Color x:Key="AppAccentLight">#A699FF</Color>
+    <!-- Secondary: Purple -->
+    <Color x:Key="Secondary">#7C3AED</Color>
+    <Color x:Key="OnSecondary">#FFFFFF</Color>
+    <Color x:Key="SecondaryContainer">#6D28D9</Color>
+    <Color x:Key="OnSecondaryContainer">#F3E8FF</Color>
 
-    <Color x:Key="AppText1">#E3E4F0</Color>
-    <Color x:Key="AppText2">#9096B8</Color>
-    <Color x:Key="AppText3">#50546E</Color>
+    <!-- Tertiary: Cyan -->
+    <Color x:Key="Tertiary">#06B6D4</Color>
+    <Color x:Key="OnTertiary">#FFFFFF</Color>
+    <Color x:Key="TertiaryContainer">#0891B2</Color>
+    <Color x:Key="OnTertiaryContainer">#CFFAFE</Color>
 
-    <Color x:Key="AppSuccess">#34C770</Color>
-    <Color x:Key="AppWarning">#F0A030</Color>
-    <Color x:Key="AppDanger">#E05560</Color>
+    <!-- Background Colors -->
+    <Color x:Key="AppBg">#121212</Color>
+    <Color x:Key="AppSurface">#1E1E1E</Color>
+    <Color x:Key="AppSurface2">#282828</Color>
+    <Color x:Key="AppPanel">#1F1F1F</Color>
+    <Color x:Key="AppBorder">#3F3F3F</Color>
+    <Color x:Key="AppBorderStrong">#4A4A4A</Color>
+    <Color x:Key="AppSep">#2A2A2A</Color>
 
-    <Color x:Key="EditorBg">#07080D</Color>
-    <Color x:Key="EditorSurface">#0D0E15</Color>
+    <!-- Accent & Semantic -->
+    <Color x:Key="AppAccent">#6366F1</Color>
+    <Color x:Key="AppAccentDim">#4F46E5</Color>
+    <Color x:Key="AppAccentSoft">#3730A3</Color>
+    <Color x:Key="AppAccentGlow">#6366F144</Color>
+    <Color x:Key="AppAccentLight">#818CF8</Color>
 
-    <!-- ── MAUI required keys (keep) ── -->
-    <Color x:Key="Primary">#7B6EFF</Color>
-    <Color x:Key="PrimaryDark">#A699FF</Color>
-    <Color x:Key="PrimaryDarkText">#E3E4F0</Color>
-    <Color x:Key="Secondary">#2A2570</Color>
-    <Color x:Key="SecondaryDarkText">#A699FF</Color>
-    <Color x:Key="Tertiary">#1A1650</Color>
+    <!-- Text Colors -->
+    <Color x:Key="AppText1">#FFFBFE</Color>
+    <Color x:Key="AppText2">#C9C9D3</Color>
+    <Color x:Key="AppText3">#79747E</Color>
 
-    <Color x:Key="White">White</Color>
-    <Color x:Key="Black">Black</Color>
-    <Color x:Key="Magenta">#D600AA</Color>
-    <Color x:Key="MidnightBlue">#190649</Color>
-    <Color x:Key="OffBlack">#0F1014</Color>
+    <!-- Semantic Colors -->
+    <Color x:Key="AppSuccess">#4CAF50</Color>
+    <Color x:Key="AppWarning">#FB8C00</Color>
+    <Color x:Key="AppDanger">#E53935</Color>
 
-    <Color x:Key="Gray100">#E1E1E1</Color>
-    <Color x:Key="Gray200">#C8C8C8</Color>
-    <Color x:Key="Gray300">#ACACAC</Color>
-    <Color x:Key="Gray400">#919191</Color>
-    <Color x:Key="Gray500">#6E6E6E</Color>
-    <Color x:Key="Gray600">#404040</Color>
+    <!-- Editor Specific -->
+    <Color x:Key="EditorBg">#0A0A0A</Color>
+    <Color x:Key="EditorSurface">#151515</Color>
+
+    <!-- ── Vision Edit Editor Tokens ──────────────────────────────────────
+         These are used by EditorView, EditorPage, ChatView, ChatPage.
+         Mapped to the current indigo/purple App palette.
+    ──────────────────────────────────────────────────────────────────── -->
+    <!-- Text hierarchy -->
+    <Color x:Key="VE_Text1">#FFFBFE</Color>
+    <Color x:Key="VE_Text2">#C9C9D3</Color>
+    <Color x:Key="VE_Text3">#79747E</Color>
+    <Color x:Key="VE_Text4">#4A4A58</Color>
+
+    <!-- Accent: indigo-based (replaces former gold) -->
+    <Color x:Key="VE_Gold">#818CF8</Color>
+    <Color x:Key="VE_GoldDim">#6366F1</Color>
+    <Color x:Key="VE_GoldMid">#4F46E5</Color>
+    <Color x:Key="VE_GoldFaint">#6366F130</Color>
+
+    <!-- Background surfaces -->
+    <Color x:Key="VE_BgBase">#0D0D11</Color>
+    <Color x:Key="VE_BgPanel">#1A1A1F</Color>
+    <Color x:Key="VE_BgCard">#1E1E2A</Color>
+    <Color x:Key="VE_BgInput">#18181E</Color>
+
+    <!-- Borders -->
+    <Color x:Key="VE_Border2">#2A2A38</Color>
+
+    <!-- Semantic -->
+    <Color x:Key="VE_Error">#E53935</Color>
+    <Color x:Key="VE_ErrorDim">#3B1212</Color>
+
+    <!-- Grayscale -->
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="Gray100">#F5F5F5</Color>
+    <Color x:Key="Gray200">#EEEEEE</Color>
+    <Color x:Key="Gray300">#E0E0E0</Color>
+    <Color x:Key="Gray400">#BDBDBD</Color>
+    <Color x:Key="Gray500">#9E9E9E</Color>
+    <Color x:Key="Gray600">#757575</Color>
     <Color x:Key="Gray900">#212121</Color>
-    <Color x:Key="Gray950">#141414</Color>
+    <Color x:Key="Gray950">#0A0A0A</Color>
 
-    <SolidColorBrush x:Key="PrimaryBrush"   Color="{StaticResource Primary}"/>
+    <!-- MAUI Required Keys -->
+    <Color x:Key="PrimaryDark">#818CF8</Color>
+    <Color x:Key="PrimaryDarkText">#FFFBFE</Color>
+    <Color x:Key="SecondaryDarkText">#F3E8FF</Color>
+
+    <!-- Brushes -->
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
-    <SolidColorBrush x:Key="TertiaryBrush"  Color="{StaticResource Tertiary}"/>
-    <SolidColorBrush x:Key="WhiteBrush"     Color="{StaticResource White}"/>
-    <SolidColorBrush x:Key="BlackBrush"     Color="{StaticResource Black}"/>
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
+    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
 
     <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
     <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>

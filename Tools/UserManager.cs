@@ -8,6 +8,6 @@ public partial class UserManager : ObservableObject
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsLoggedIn))]
-    private string _username;
+    private string _username = string.Empty;
     public bool IsLoggedIn => !string.IsNullOrEmpty(Username);
 }

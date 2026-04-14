@@ -38,6 +38,9 @@
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
         <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+        
+        <!-- Suppress MVVM toolkit AOT warnings in WinUI context -->
+        <NoWarn>$(NoWarn);MVVMTK0045</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -61,7 +64,7 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
+<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -77,36 +80,6 @@
     <ItemGroup>
       <ProjectReference Include="..\Models\Models.csproj" />
       <ProjectReference Include="..\Tools\Tools.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Views\ChatView.xaml.cs">
-        <DependentUpon>ChatView.xaml</DependentUpon>
-      </Compile>
-      <Compile Update="Views\EditorPage.xaml.cs">
-        <DependentUpon>EditorPage.xaml</DependentUpon>
-      </Compile>
-      <Compile Update="Views\EditorView.xaml.cs">
-        <DependentUpon>EditorView.xaml</DependentUpon>
-      </Compile>
-      <Compile Update="Views\GlowBorderView.xaml.cs">
-        <DependentUpon>GlowBorderView.xaml</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <MauiXaml Update="Views\ChatView.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </MauiXaml>
-      <MauiXaml Update="Views\EditorPage.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </MauiXaml>
-      <MauiXaml Update="Views\EditorView.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </MauiXaml>
-      <MauiXaml Update="Views\GlowBorderView.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </MauiXaml>
     </ItemGroup>
 
 </Project>

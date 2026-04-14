@@ -1,4 +1,5 @@
-using OpenAI;
+using System.Runtime.CompilerServices;
+using OpenAI.Chat;
 using OpenAI.Responses;
 
 #pragma warning disable OPENAI001
@@ -7,42 +8,64 @@ namespace Tools;
 
 public class ApiHandler
 {
-    private readonly ResponsesClient _chatClient;
+    private readonly ChatClient _chatClient;
     private readonly ResponsesClient _completionClient;
 
     private const string ChatModel       = "gpt-4o";
     private const string CompletionModel = "gpt-4o-mini";
 
+    private const string ChatSystemPrompt =
+        "You are a helpful assistant embedded in a smart AI text editor. " +
+        "Reply in plain text only — no markdown, no code fences, no bullet symbols. " +
+        "Be concise and direct.";
+
     public ApiHandler()
     {
-        string apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? string.Empty;
-        _chatClient       = new ResponsesClient(ChatModel, apiKey);
+        string apiKey     = Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? string.Empty;
+        _chatClient       = new ChatClient(ChatModel, apiKey);
         _completionClient = new ResponsesClient(CompletionModel, apiKey);
     }
 
-    /// <summary>Chat assistant response for the AI panel.</summary>
-    public async Task<string> getApiResponse(string inputMessage)
+    /// <summary>
+    /// Streams a multi-turn chat response token by token.
+    /// <paramref name="history"/> contains all turns so far (including the new user turn).
+    /// <paramref name="editorContext"/> is optional selected text injected as a system note.
+    /// </summary>
+    public async IAsyncEnumerable<string> StreamChatAsync(
+        IReadOnlyList<(string role, string content)> history,
+        string? editorContext,
+        [EnumeratorCancellation] CancellationToken ct = default)
     {
-        CreateResponseOptions options = new()
+        var messages = new List<ChatMessage>
         {
-            Model        = ChatModel,
-            Instructions = "You are a helpful assistant inside a smart AI text editor. " +
-                           "Appended context is for reference only — never echo it back. " +
-                           "Reply in plain text only, never use markdown."
+            ChatMessage.CreateSystemMessage(ChatSystemPrompt)
         };
-        options.InputItems.Add(ResponseItem.CreateUserMessageItem(inputMessage));
-        ResponseResult response = await _chatClient.CreateResponseAsync(options);
-        foreach (ResponseItem item in response.OutputItems)
-            if (item is MessageResponseItem msg)
-                return msg.Content.FirstOrDefault()?.Text ?? string.Empty;
-        return "Could not get a response";
+
+        if (!string.IsNullOrWhiteSpace(editorContext))
+            messages.Add(ChatMessage.CreateSystemMessage(
+                $"The user currently has the following text selected in the editor:\n{editorContext}"));
+
+        foreach (var (role, content) in history)
+        {
+            messages.Add(role == "user"
+                ? ChatMessage.CreateUserMessage(content)
+                : ChatMessage.CreateAssistantMessage(content));
+        }
+
+        var streaming = _chatClient.CompleteChatStreamingAsync(messages, cancellationToken: ct);
+
+        await foreach (var update in streaming.WithCancellation(ct))
+        {
+            foreach (var part in update.ContentUpdate)
+            {
+                if (!string.IsNullOrEmpty(part.Text))
+                    yield return part.Text;
+            }
+        }
     }
 
     /// <summary>
-    /// Inline text completion using the Completions API approach:
-    /// takes the text written so far and returns a natural continuation.
-    /// Uses gpt-4o-mini with a strict completion-style system prompt
-    /// (mirrors the /v1/completions endpoint behaviour).
+    /// Inline text completion — takes text written so far, returns a short continuation.
     /// </summary>
     public async Task<string> GetCompletionResponse(string context)
     {

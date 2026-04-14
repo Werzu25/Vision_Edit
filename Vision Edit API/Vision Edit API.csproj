@@ -8,22 +8,32 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
-          <PrivateAssets>all</PrivateAssets>
+        <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+        <PackageReference Include="CommunityToolkit.Maui" Version="14.1.0" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.1" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+        <PackageReference Include="OpenAI" Version="2.10.0" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Tools\Tools.csproj" />
+      <Folder Include="Controllers\" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\ORM\ORM.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="..\Tools\Validation.cs" Link="Tools\Validation.cs" />
     </ItemGroup>
 
 </Project>

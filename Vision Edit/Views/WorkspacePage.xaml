@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:Vision_Edit.Views"
+             x:Class="Vision_Edit.Views.WorkspacePage"
+             BackgroundColor="{StaticResource VE_BgBase}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="48,*" RowSpacing="0">
+
+        <!-- ── TOP CHROME BAR ───────────────────────────────────────────── -->
+        <Border Grid.Row="0"
+                BackgroundColor="{StaticResource VE_BgPanel}"
+                Stroke="{StaticResource VE_Border2}"
+                StrokeThickness="0,0,0,1"
+                Padding="20,0">
+            <Border.StrokeShape><RoundRectangle CornerRadius="0"/></Border.StrokeShape>
+
+            <Grid ColumnDefinitions="Auto,*,Auto,6,Auto" VerticalOptions="Center">
+
+                <!-- Branding -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                    <BoxView WidthRequest="3"
+                             HeightRequest="14"
+                             BackgroundColor="{StaticResource VE_GoldDim}"
+                             VerticalOptions="Center"/>
+                    <VerticalStackLayout Spacing="1" VerticalOptions="Center">
+                        <Label Text="VISION EDIT"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="10"
+                               CharacterSpacing="4"
+                               TextColor="{StaticResource VE_Text1}"/>
+                        <Label Text="WORKSPACE"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="7"
+                               CharacterSpacing="3"
+                               TextColor="{StaticResource VE_GoldDim}"/>
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+
+                <!-- Editor-only button -->
+                <Border Grid.Column="2"
+                        BackgroundColor="Transparent"
+                        Stroke="{StaticResource VE_Border2}"
+                        StrokeThickness="1"
+                        Padding="0">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="3"/></Border.StrokeShape>
+                    <Button Text="EDITOR ONLY"
+                            Clicked="OnEditorOnlyClicked"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource VE_Text3}"
+                            FontFamily="OpenSansSemibold"
+                            FontSize="9"
+                            CharacterSpacing="1"
+                            HeightRequest="30"
+                            Padding="12,0"
+                            CornerRadius="3"/>
+                </Border>
+
+                <!-- Chat-only button -->
+                <Border Grid.Column="4"
+                        BackgroundColor="Transparent"
+                        Stroke="{StaticResource VE_Border2}"
+                        StrokeThickness="1"
+                        Padding="0">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="3"/></Border.StrokeShape>
+                    <Button Text="CHAT ONLY"
+                            Clicked="OnChatOnlyClicked"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource VE_Text3}"
+                            FontFamily="OpenSansSemibold"
+                            FontSize="9"
+                            CharacterSpacing="1"
+                            HeightRequest="30"
+                            Padding="12,0"
+                            CornerRadius="3"/>
+                </Border>
+
+            </Grid>
+        </Border>
+
+        <!-- ── SPLIT CONTENT AREA ────────────────────────────────────────── -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="3*,2*"
+              ColumnSpacing="0"
+              RowSpacing="0"
+              Padding="16,12,16,0">
+
+            <!-- ── EDITOR PANEL ── -->
+            <Border Grid.Column="0"
+                    Margin="0,0,6,0"
+                    BackgroundColor="{StaticResource VE_BgBase}"
+                    Stroke="{StaticResource VE_Border2}"
+                    StrokeThickness="1">
+                <Border.StrokeShape><RoundRectangle CornerRadius="4,4,0,0"/></Border.StrokeShape>
+                <views:EditorView x:Name="EditorArea" VerticalOptions="Fill"/>
+            </Border>
+
+            <!-- ── CHAT PANEL ── -->
+            <Border Grid.Column="1"
+                    Margin="6,0,0,0"
+                    BackgroundColor="{StaticResource VE_BgBase}"
+                    Stroke="{StaticResource VE_Border2}"
+                    StrokeThickness="1">
+                <Border.StrokeShape><RoundRectangle CornerRadius="4,4,0,0"/></Border.StrokeShape>
+                <views:ChatView x:Name="ChatArea" VerticalOptions="Fill"/>
+            </Border>
+
+        </Grid>
+
+    </Grid>
+</ContentPage>
