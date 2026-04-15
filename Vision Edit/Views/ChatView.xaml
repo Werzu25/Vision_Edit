@@ -20,7 +20,7 @@
         ScrollView instead of CollectionView avoids the unbounded-measure
         problem that pushed the input bar off screen.
     -->
-    <Grid RowDefinitions="*,44" RowSpacing="0" BackgroundColor="Transparent">
+    <Grid RowDefinitions="*,Auto" RowSpacing="0" BackgroundColor="Transparent">
 
         <!-- ═══════════════════════════════════════════════════════════════
              ROW 0 — message scroll area
@@ -170,7 +170,7 @@
         </ScrollView>
 
         <!-- ═══════════════════════════════════════════════════════════════
-             ROW 1 — input bar, exactly 44 px
+             ROW 1 — input bar (height adapts to content)
         ═══════════════════════════════════════════════════════════════ -->
         <Grid Grid.Row="1" BackgroundColor="{StaticResource VE_BgPanel}">
 
@@ -181,7 +181,7 @@
 
             <!-- Controls -->
             <Grid ColumnDefinitions="*,4,Auto,4,Auto"
-                  Padding="10,0"
+                  Padding="10,8"
                   VerticalOptions="Center">
 
                 <!-- Text input -->
@@ -201,7 +201,7 @@
                            BackgroundColor="Transparent"
                            FontFamily="OpenSansRegular"
                            FontSize="12"
-                           HeightRequest="28"
+                           HeightRequest="{OnIdiom Phone=36, Default=28}"
                            MinimumHeightRequest="0"
                            MinimumWidthRequest="0"
                            ReturnCommand="{Binding SendMessageCommand}"
@@ -214,8 +214,8 @@
                         Command="{Binding ClearChatCommand}"
                         Style="{StaticResource VE_BtnIcon}"
                         IsVisible="{Binding Messages, Converter={StaticResource IsNotNullOrEmpty}}"
-                        WidthRequest="28"
-                        HeightRequest="28"
+                        WidthRequest="{OnIdiom Phone=36, Default=28}"
+                        HeightRequest="{OnIdiom Phone=36, Default=28}"
                         FontSize="7"
                         CharacterSpacing="1"/>
 
@@ -225,8 +225,8 @@
                         Command="{Binding SendMessageCommand}"
                         IsEnabled="{Binding IsStreaming, Converter={StaticResource InvertBool}}"
                         Style="{StaticResource VE_BtnPrimary}"
-                        WidthRequest="50"
-                        HeightRequest="28"
+                        WidthRequest="{OnIdiom Phone=58, Default=50}"
+                        HeightRequest="{OnIdiom Phone=36, Default=28}"
                         FontSize="8"
                         CharacterSpacing="2"
                         Padding="0"/>

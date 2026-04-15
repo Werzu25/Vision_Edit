@@ -5,6 +5,7 @@ using Models;
 using System.Net.Http.Json;
 using System.Text;
 using Tools;
+using Vision_Edit.Views;
 
 namespace Vision_Edit.ViewModels;
 
@@ -337,10 +338,13 @@ public partial class EditorViewModel : ObservableObject
             }
 
             string[] names = [.. docs.Select(d => d.Name)];
-            string? chosen = await Shell.Current.DisplayActionSheetAsync(
-                title: "Open document", cancel: "Cancel", destruction: null, buttons: names);
+            var tcs = new TaskCompletionSource<string?>();
+            var picker = new OpenDocumentPage(names);
+            picker.DocumentChosen += (_, name) => tcs.TrySetResult(name);
+            await Shell.Current.Navigation.PushModalAsync(picker);
+            string? chosen = await tcs.Task;
 
-            if (string.IsNullOrEmpty(chosen) || chosen == "Cancel") return;
+            if (string.IsNullOrEmpty(chosen)) return;
 
             var summary = docs.FirstOrDefault(d => d.Name == chosen);
             if (summary is null) return;

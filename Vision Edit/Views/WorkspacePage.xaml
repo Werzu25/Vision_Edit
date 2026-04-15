@@ -81,14 +81,16 @@
 
         <!-- ── SPLIT CONTENT AREA ────────────────────────────────────────── -->
         <Grid Grid.Row="1"
-              ColumnDefinitions="3*,2*"
+              ColumnDefinitions="{OnIdiom Phone='*', Default='3*,2*'}"
+              RowDefinitions="{OnIdiom Phone='*,*', Default='*'}"
               ColumnSpacing="0"
               RowSpacing="0"
               Padding="16,12,16,0">
 
             <!-- ── EDITOR PANEL ── -->
             <Border Grid.Column="0"
-                    Margin="0,0,6,0"
+                    Grid.Row="0"
+                    Margin="{OnIdiom Phone='0,0,0,6', Default='0,0,6,0'}"
                     BackgroundColor="{StaticResource VE_BgBase}"
                     Stroke="{StaticResource VE_Border2}"
                     StrokeThickness="1">
@@ -97,8 +99,9 @@
             </Border>
 
             <!-- ── CHAT PANEL ── -->
-            <Border Grid.Column="1"
-                    Margin="6,0,0,0"
+            <Border Grid.Column="{OnIdiom Phone=0, Default=1}"
+                    Grid.Row="{OnIdiom Phone=1, Default=0}"
+                    Margin="{OnIdiom Phone='0,6,0,0', Default='6,0,0,0'}"
                     BackgroundColor="{StaticResource VE_BgBase}"
                     Stroke="{StaticResource VE_Border2}"
                     StrokeThickness="1">

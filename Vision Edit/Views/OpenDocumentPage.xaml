@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vision_Edit.Views.OpenDocumentPage"
+             BackgroundColor="{StaticResource VE_BgBase}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="48,*,Auto" RowSpacing="0">
+
+        <!-- ── HEADER BAR ── -->
+        <Border Grid.Row="0"
+                BackgroundColor="{StaticResource VE_BgPanel}"
+                Stroke="{StaticResource VE_Border2}"
+                StrokeThickness="0,0,0,1"
+                Padding="20,0">
+            <Border.StrokeShape><RoundRectangle CornerRadius="0"/></Border.StrokeShape>
+
+            <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                <BoxView WidthRequest="3"
+                         HeightRequest="14"
+                         BackgroundColor="{StaticResource VE_GoldDim}"
+                         VerticalOptions="Center"/>
+                <VerticalStackLayout Spacing="1" VerticalOptions="Center">
+                    <Label Text="VISION EDIT"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="10"
+                           CharacterSpacing="4"
+                           TextColor="{StaticResource VE_Text1}"/>
+                    <Label Text="OPEN DOCUMENT"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="7"
+                           CharacterSpacing="3"
+                           TextColor="{StaticResource VE_GoldDim}"/>
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+        </Border>
+
+        <!-- ── DOCUMENT LIST ── -->
+        <CollectionView x:Name="DocList"
+                        Grid.Row="1"
+                        SelectionMode="Single"
+                        SelectionChanged="OnDocumentSelected"
+                        Margin="16,12,16,4">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,0,0,6"
+                            BackgroundColor="{StaticResource VE_BgCard}"
+                            Stroke="{StaticResource VE_Border2}"
+                            StrokeThickness="1"
+                            Padding="16,13">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="4"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <!-- Accent mark -->
+                            <BoxView Grid.Column="0"
+                                     WidthRequest="2"
+                                     HeightRequest="14"
+                                     BackgroundColor="{StaticResource VE_GoldDim}"
+                                     VerticalOptions="Center"/>
+                            <!-- Document name -->
+                            <Label Grid.Column="1"
+                                   Text="{Binding}"
+                                   FontFamily="OpenSansRegular"
+                                   FontSize="13"
+                                   TextColor="{StaticResource VE_Text1}"
+                                   VerticalOptions="Center"
+                                   LineBreakMode="TailTruncation"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <!-- Empty state -->
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     Spacing="8"
+                                     Padding="0,48,0,0">
+                    <BoxView WidthRequest="20"
+                             HeightRequest="1"
+                             BackgroundColor="{StaticResource VE_GoldDim}"
+                             HorizontalOptions="Center"/>
+                    <Label Text="No saved documents"
+                           FontFamily="OpenSansRegular"
+                           FontSize="13"
+                           TextColor="{StaticResource VE_Text3}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+        <!-- ── CANCEL FOOTER ── -->
+        <Border Grid.Row="2"
+                BackgroundColor="{StaticResource VE_BgPanel}"
+                Stroke="{StaticResource VE_Border2}"
+                StrokeThickness="0,1,0,0"
+                Padding="16,6">
+            <Border.StrokeShape><RoundRectangle CornerRadius="0"/></Border.StrokeShape>
+
+            <Button Text="CANCEL"
+                    Clicked="OnCancelClicked"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource VE_Text3}"
+                    FontFamily="OpenSansSemibold"
+                    FontSize="9"
+                    CharacterSpacing="2"
+                    HorizontalOptions="Fill"
+                    HeightRequest="28"
+                    BorderWidth="1"
+                    BorderColor="{StaticResource VE_Border2}"
+                    CornerRadius="3"
+                    MinimumHeightRequest="0"
+                    MinimumWidthRequest="0"/>
+        </Border>
+
+    </Grid>
+</ContentPage>
